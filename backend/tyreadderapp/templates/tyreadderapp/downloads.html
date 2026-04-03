@@ -1,0 +1,36 @@
+{% extends "tyreadderapp/base/base.html" %} {% block content %}
+
+<style>
+  .products {
+    background-color: gray;
+    width: 350px;
+    display:flex;
+    flex-direction: column;
+  }
+  p {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  button {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+  }
+</style>
+
+<h1>Wybierz format pliku do pobrania</h1>
+<div class="products">
+  <form action="" method="POST">
+    <p>Produkty</p>
+    {% csrf_token %}{{form.as_p}}
+    <button type="submit">Download</button>
+  </form>
+</div>
+
+{% endblock %}

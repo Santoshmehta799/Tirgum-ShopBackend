@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Similar Tread Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+
+    <!-- Updated width and padding -->
+    <div class="max-w-7xl w-[90%] mx-auto bg-white p-8 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold text-blue-600 mb-6">Similar Tread Dashboard</h1>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Brand Dropdown -->
+            <div>
+                <label class="block font-semibold">Brand:</label>
+                <select name="brand" id="brand" class="w-full border p-2 rounded">
+                    <option value="">Select Brand</option>
+                    {% for b in brands %}
+                        <option value="{{ b.id }}">{{ b.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tread Dropdown -->
+            <div>
+                <label class="block font-semibold">Tread:</label>
+                <select name="tread" id="tread" class="w-full border p-2 rounded">
+                    <option value="">Select Tread</option>
+                </select>
+            </div>
+
+            <!-- Similar Treads Multi-Select -->
+            <div>
+                <label class="block font-semibold">Similar Tread Combinations:</label>
+                <select name="similar_treads" id="similar_treads" multiple
+                        class="w-full border rounded p-2 text-sm"
+                        style="height: 500px;">
+                    {% for st in similar_treads %}
+                        <option value="{{ st.id }}">{{ st.brand.name }} - {{ st.tread.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Save Button -->
+            <div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#brand').change(function(){
+                var brand_id = $(this).val();
+                if(brand_id){
+                    $.ajax({
+                        url: "/tyreadderapp/get-treads/" + brand_id + "/",
+                        success: function(data){
+                            $('#tread').empty().append('<option value="">Select Tread</option>');
+                            data.forEach(function(item){
+                                $('#tread').append('<option value="'+item.id+'">'+item.name+'</option>');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

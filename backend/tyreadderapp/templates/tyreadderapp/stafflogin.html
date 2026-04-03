@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <div>
+    {% comment %}
+    <form action="{% url 'login' %}" method="post">
+      <h1>Hello login</h1>
+      <div>
+        <label for="login">Login</label>
+        <input type="text" id="login" name="login" />
+        <label for="password">Hasło</label>
+        <input type="text" id="password" name="password" />
+      </div>
+      <button type="submit">Zaloguj się</button>
+    </form>
+    {% endcomment %}
+    <form method="POST" action="">{% csrf_token %}{{form}} <button type = "submit">Login</button> </form>
+  </div>
+</html>

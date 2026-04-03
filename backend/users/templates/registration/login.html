@@ -1,0 +1,22 @@
+<!-- templates/admin/login.html -->
+
+{% extends 'admin/login.html' %}
+
+{% block branding %}
+   <h1> TirGum LogIn </h1>
+   {% endblock %}
+
+
+
+   {% block content %}
+   <h2>Welcome to  TirGum Login Page</h2>
+
+   {% if perms_denied %}{{ perms_denied }}{% endif %}
+   <div class="signin-container">
+      <a href="{% url 'signup' %}" class="signin-button"><button type="button">Sign Up</button></a>
+      <p class="signin-text">Don't have an account? Sign Up here.</p>
+    </div>
+ 
+   {{ block.super }}
+ {% endblock %}
+

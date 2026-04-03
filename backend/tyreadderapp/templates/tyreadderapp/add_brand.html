@@ -1,0 +1,17 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'tyreadderapp/addbrand.css' %}" />
+{% endblock %} {% block content %}
+
+<div class="container">
+  <h1>Dodaj markę</h1>
+  <form method="post">
+    {% csrf_token %} {{form.as_p}}
+
+    <button type="submit" class="add_item">Submit</button>
+  </form>
+  <a href="main">
+    <button type="button" class="mainpage">Strona główna</button>
+  </a>
+  <!-- {{form.errors}} -->
+</div>
+{% endblock %}

@@ -1,0 +1,348 @@
+{% extends "tyreadderapp/base/base.html" %} 
+{% load static %} 
+{% block content %}
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0;
+            margin: 0 auto;
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
+            background-color: #fff; 
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4C5C68;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        td + td, th + th {
+            border-left: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f7f9fb;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #eef3f7;
+        }
+
+        tbody tr:hover {
+            background-color: #d3e4f1;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        td:first-child {
+            text-align: center;
+        }
+
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            border-radius: 4px; 
+        }
+
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: black;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1; /* Make sure it sits on top of other content */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            padding-top: 60px;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            margin-top: 10%; /* Adjust for better centering */
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Image hover effects */
+        .image-preview {
+            cursor: pointer;
+            max-width: 100px;
+            max-height: 100px;
+        }
+        .search-input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display:flex;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #1182d8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size:15px;
+            margin-bottom:15px;
+        }
+    </style>
+
+    <h1>Pair Adverts</h1>
+
+    <form>
+        <label for="name">Wyszukaj parę:</label>
+        <input class="search-input" type="text" id="name" name="name" value="{{ request.GET.name }}">
+        <br><br>
+        <input type="submit" value="Submit" class="submit-btn">
+    </form>
+
+    <!-- Form for bulk action -->
+    <div class="table-container">
+        <form action="{% url 'tyreadderapp:addpair_olx_bulk' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action_type" id="action_type">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Wybierać</th>
+                        <!-- <th>Id</th> -->
+                        <th>Pair No.</th>
+                        <th>Tytuł</th>
+                        <th>Opis</th>
+                        <th>Cena</th>
+                        <th>Is OLX</th>
+                        <th>OLX Active</th>
+                        <th>OLX Advert ID</th>
+                        <th>Zablokowany</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pair in pairs %}
+                    <tr>
+                        <td><input type="checkbox" name="pair_ids" value="{{ pair.id }}"></td>
+                        <!-- <td>{{ pair.id }}</td> -->
+                        <td>{{ pair.name }}</td>
+                        <td>{{ pair.pair_title }}</td>
+                        <td>{{ pair.pair_description|linebreaksbr }}</td>
+                        <td>{{ pair.pair_price }}</td>
+                        <td>
+                            {% if pair.pair_is_olx %}
+                                <span class="dot"></span>
+                            {% endif %}
+                        </td>
+                        <td>{{ pair.pair_is_olx_active }}</td>
+                        <td>{{ pair.pair_olx_advert_id }}</td>
+                        <td>{{ pair.blocked_pair }}</td>
+                        <td>
+                            {% if pair.first_image_url %}
+                                <img src="{{ pair.first_image_url }}" alt="First Image" class="image-preview" data-full-image="{{ pair.first_image_url }}">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="merge-images-btn" data-pair-id="{{ pair.id }}">Merge Images</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="submit" onclick="setAction('bulk_save_olx')" >Add OLX Bulk</button>
+            <button type="submit" onclick="setAction('Olx_update')">OLX Update</button>
+            <button type="submit" onclick="setAction('Allegro')">Allegro</button>
+        </form>
+    </div>
+
+    <!-- Modal for image preview -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+
+<script>
+    // Store the URL path in a JavaScript variable
+    const mergePairImagesUrl = "{% url 'tyreadderapp:merge_pair_images' %}";
+
+    // Add this to your template or include it in a JS file
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all merge buttons
+        const mergeButtons = document.querySelectorAll('.merge-images-btn');
+        
+        // Add click event listener to each button
+        mergeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const pairId = this.getAttribute('data-pair-id');
+                const button = this;
+                
+                // Change button text to show processing
+                const originalText = button.textContent;
+                button.textContent = 'Processing...';
+                button.disabled = true;
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('pair_id', pairId);
+                
+                // Get CSRF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                // Make AJAX request - using the Django URL variable
+                fetch(mergePairImagesUrl, {  // Use the variable here instead of hardcoded path
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    // Check if the response is actually JSON
+                    const contentType = response.headers.get('content-type');
+                    console.log('Content type:', contentType);
+                    
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json();
+                    } else {
+                        // Log the HTML response to see what's being returned
+                        return response.text().then(text => {
+                            console.error('Received non-JSON response:', text);
+                            throw new Error('Expected JSON response but got HTML');
+                        });
+                    }
+                })
+                .then(data => {
+                    if (data.success) {
+                        button.textContent = 'Merged!';
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                            button.disabled = false;
+                        }, 2000);
+                        
+                        // Optional: Show the merged image or refresh the page
+                        // window.location.reload();
+                    } else {
+                        alert(data.message);
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while merging images');
+                    button.textContent = originalText;
+                    button.disabled = false;
+                });
+            });
+        });
+    });
+</script>
+
+    <script>
+
+        function setAction(actionType) {
+            document.getElementById('action_type').value = actionType;
+            // Submit the form after setting the action type
+            document.querySelector('form').submit();
+        }
+        
+    </script>
+
+    <script>
+        // JavaScript to handle the image preview modal
+        document.querySelectorAll('.image-preview').forEach(function (img) {
+            img.addEventListener('click', function () {
+                var fullImageUrl = img.getAttribute('data-full-image');
+                var modal = document.getElementById('imageModal');
+                var modalImage = document.getElementById('modalImage');
+                modal.style.display = "block"; // Show modal
+                modalImage.src = fullImageUrl; // Set the image source to the clicked image
+            });
+        });
+
+        // Close the modal when clicking outside the image
+        window.onclick = function(event) {
+            var modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                closeModal(); // Close the modal if the user clicks anywhere outside the modal content
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById('imageModal');
+            modal.style.display = "none"; // Hide the modal
+        }
+
+    </script>
+
+{% endblock %}

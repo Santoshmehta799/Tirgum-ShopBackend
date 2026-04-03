@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Otomoto Ad Detail</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { margin-bottom: 10px; }
+        form { margin-top: 20px; max-width: 600px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 5px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 20px; cursor: pointer; }
+        .message { color: green; margin-bottom: 15px; }
+        .error { color: red; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Otomoto Ad Detail</h1>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+
+    {% if ad %}
+        <form id="update-ad-form" method="post">
+            {% csrf_token %}
+            <!-- Title -->
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" value="{{ ad.title }}">
+
+            <!-- Description -->
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="5">{{ ad.description }}</textarea>
+
+            <!-- Category -->
+            <label for="category_id">Category ID</label>
+            <input type="number" name="category_id" id="category_id" value="{{ ad.category_id }}">
+
+            <!-- Location -->
+            <label for="region_id">Region ID</label>
+            <input type="number" name="region_id" id="region_id" value="{{ ad.region_id }}">
+
+            <label for="city_id">City ID</label>
+            <input type="number" name="city_id" id="city_id" value="{{ ad.city_id }}">
+
+            <label for="district_id">District ID</label>
+            <input type="number" name="district_id" id="district_id" value="{{ ad.district_id }}">
+
+            <label for="latitude">Latitude</label>
+            <input type="text" name="coordinates.latitude" id="latitude" value="{{ ad.coordinates.latitude }}">
+
+            <label for="longitude">Longitude</label>
+            <input type="text" name="coordinates.longitude" id="longitude" value="{{ ad.coordinates.longitude }}">
+
+            <!-- Contact -->
+            <label for="contact_person">Contact Person</label>
+            <input type="text" name="contact.person" id="contact_person" value="{{ ad.contact.person }}">
+
+            <!-- Params -->
+            <label for="make">Make</label>
+            <input type="text" name="params.make" id="make" value="{{ ad.params.make }}">
+
+            <label for="model">Model</label>
+            <input type="text" name="params.model" id="model" value="{{ ad.params.model }}">
+
+            <label for="year">Year</label>
+            <input type="number" name="params.year" id="year" value="{{ ad.params.year }}">
+
+            <label for="mileage">Mileage</label>
+            <input type="number" name="params.mileage" id="mileage" value="{{ ad.params.mileage }}">
+
+            <label for="fuel_type">Fuel Type</label>
+            <input type="text" name="params.fuel_type" id="fuel_type" value="{{ ad.params.fuel_type }}">
+
+            <label for="price">Price</label>
+            <input type="text" name="params.price.1" id="price" value="{{ ad.params.price.1 }}">
+
+            <label for="currency">Currency</label>
+            <input type="text" name="params.price.currency" id="currency" value="{{ ad.params.price.currency }}">
+
+            <label for="body_type">Body Type</label>
+            <input type="text" name="params.body_type" id="body_type" value="{{ ad.params.body_type }}">
+
+            <label for="color">Color</label>
+            <input type="text" name="params.color" id="color" value="{{ ad.params.color }}">
+
+            <label for="new_used">New/Used</label>
+            <select name="new_used" id="new_used">
+                <option value="new" {% if ad.new_used == 'new' %}selected{% endif %}>New</option>
+                <option value="used" {% if ad.new_used == 'used' %}selected{% endif %}>Used</option>
+            </select>
+
+            <button type="submit">Update Ad</button>
+        </form>
+    {% else %}
+        <p>Ad data not available.</p>
+    {% endif %}
+
+    <script>
+        // Convert form data into nested JSON for POST
+        const form = document.getElementById('update-ad-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const payload = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                category_id: parseInt(formData.get('category_id')),
+                region_id: parseInt(formData.get('region_id')),
+                city_id: parseInt(formData.get('city_id')),
+                district_id: parseInt(formData.get('district_id')),
+                coordinates: {
+                    latitude: parseFloat(formData.get('coordinates.latitude')),
+                    longitude: parseFloat(formData.get('coordinates.longitude'))
+                },
+                contact: {
+                    person: formData.get('contact.person')
+                },
+                params: {
+                    make: formData.get('params.make'),
+                    model: formData.get('params.model'),
+                    year: parseInt(formData.get('params.year')),
+                    mileage: parseInt(formData.get('params.mileage')),
+                    fuel_type: formData.get('params.fuel_type'),
+                    body_type: formData.get('body_type'),
+                    color: formData.get('color'),
+                    price: {
+                        1: parseFloat(formData.get('params.price.1')),
+                        currency: formData.get('params.price.currency'),
+                        gross_net: 'gross'
+                    },
+                    is_imported_car: 0
+                },
+                new_used: formData.get('new_used')
+            };
+
+            fetch("", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": form.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            })
+            .catch(error => {
+                alert("Error updating ad: " + error);
+            });
+        });
+    </script>
+</body>
+</html>

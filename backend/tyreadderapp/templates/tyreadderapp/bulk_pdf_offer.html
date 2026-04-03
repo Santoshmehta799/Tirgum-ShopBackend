@@ -1,0 +1,498 @@
+{% load static %}
+
+<style>
+@page {
+    size: A4;
+    margin: 0mm 0mm 0mm 0mm;
+    @bottom-right {
+        content: "Strona " counter(page) " z " counter(pages);
+        font-size: 10px;
+        color: #666;
+    }
+}
+
+
+.product-card {
+    page-break-inside: avoid;
+    margin-bottom: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+body {
+    margin: 0;
+    font-size: 12px;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1c1c1c, #2a2a2a); /* ciemne tło */
+    color: #eee;
+}
+.motto {
+    font-size: 1rem;
+    font-style: italic;
+    color: gray; /* czerwony akcent */
+    margin-bottom: 30px;
+}
+
+.glass-header, .glass-footer {
+    backdrop-filter: blur(12px);
+    background: rgba(30, 30, 30, 0.8); /* ciemne glass */
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff4d4d; /* czerwony akcent */
+}
+hr {
+    margin: 20px 0;
+}
+
+.glass-header nav a {
+    color: #ff4d4d; /* czerwone linki */
+    margin-left: 25px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.glass-header nav a:hover {
+    text-decoration: underline;
+}
+
+.glass-footer {
+    margin-top: 50px;
+    padding: 25px 30px 20px 30px;
+    background: #1f1f1f;
+    color: #ccc;
+    border-top: 3px solid #ff4d4d;
+    font-size: 12px;
+    page-break-inside: avoid;
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-column p {
+    margin: 4px 0;
+}
+
+.footer-title {
+    font-weight: bold;
+    color: #ff4d4d;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+    font-size: 11px;
+    color: #888;
+}
+
+
+/* Styl główny */
+main {
+    padding: 40px 50px;
+}
+
+/* Nagłówki w ofercie */
+h1, h2, h3 {
+    color: #ff4d4d; /* akcentowy czerwony */
+}
+h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+.image-section{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 15px;
+}
+table {
+            border-collapse: collapse;
+            width: 50%;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            color:black;
+        }
+.offer-item{
+    margin-bottom: 5px;
+    font-size: 18px;
+    text-align: left;
+}
+.watermark {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 90px;
+    color: rgba(200, 200, 200, 0.08);
+    font-weight: bold;
+    z-index: -1;
+}
+
+.preferred-image {
+    width: 100%;          /* było 100% */
+    max-height: auto;   /* kluczowe ograniczenie */
+    object-fit: contain;
+    display: block;
+    margin-top: 10px;
+}
+
+/* .defects-section {
+    padding: 15px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+} */
+
+.defects-section {
+    padding: 12px 15px;
+    background: rgba(255, 77, 77, 0.06);
+    border-left: 4px solid #ff4d4d;
+    margin-top: 10px;
+    page-break-inside: avoid;
+}
+
+.defects-section p {
+    margin: 4px 0;
+}
+
+.defects-list {
+    margin-top: 8px;
+    padding-left: 18px;
+}
+
+.defects-list li {
+    margin-bottom: 4px;
+}
+
+.summary-section {
+    margin-top: 40px;
+    padding: 25px 30px;
+    background: rgba(255, 77, 77, 0.05);
+    border: 2px solid #ff4d4d;
+    page-break-inside: avoid;
+}
+
+.summary-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #ff4d4d;
+}
+
+.summary-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.summary-item {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.summary-item span {
+    display: block;
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+.summary-item strong {
+    font-size: 26px;
+    color: #ffffff;
+}
+
+.summary-item.highlight {
+    background: #ff4d4d;
+}
+
+.summary-item.highlight strong {
+    color: #ffffff;
+    font-size: 30px;
+}
+
+.logo {
+    font-size: 30px;
+}
+
+
+</style>
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Oferta opon ciężarowych{% endblock %}</title>
+    
+</head>
+<body>
+
+<header class="glass-header">
+    <div class="logo">
+        <!-- <img src="{% static 'tyreadderapp/logo.png' %}" alt="Logo"> -->TIRGUM.PL
+    </div>
+    <nav>
+        <p><strong><a href="#">Tirgum Mateusz Celej</a></strong></p>
+        <p><strong><a href="#">Numer oferty: {{ offer_number }}</a></strong></p>
+        <p><strong><a href="#">Data oferty: {{ date }}</a></strong></p>
+        <p><strong><a href="#">www.tirgum.pl</a></strong></p>
+    </nav>
+</header>
+
+<main>
+    <div class="offer-list">
+        
+        
+    </div>
+    
+    {% block content %}
+    <h1>Oferta sprzedaży używanych opon ciężarowych</h1>
+    <p class="motto">"W tych niełatwych dla transportu czasach optymalizuj koszty swojej firmy."</p>
+    <div class="offer-list">
+        <div class="offer-item">Uwaga,</div>
+        <br>
+        <ul>
+            <li class="offer-item"> 
+                
+                <img src="{% static 'tyreadderapp/icons/check.png' %}" style="height:14px; width:14px; vertical-align:middle; filter: invert(1);">
+
+                Wszystkie nasze opony przeszły wizualną inspekcję oraz zostały sprawdzone ciśnieniowo pod ciśnieniem 8 Bar.</li>
+            </li>
+            <br>
+                <li class="offer-item"> Wszelkie naprawy zostały wykonane zgodnie ze sztuką wulaknizatorską z użyciem profesjonalnych łat i sprzętu.</li>
+            <br>
+                <li class="offer-item"> Nasze opony są gotowe do jazdy a jakiekolwiek defekty wylistowane poniżej mają charakter informacyjny.</li>
+            <br>
+                <li class="offer-item"> Udzielamy miesięcznej gwarancji rozruchowej.</li>
+            <br>
+                <li class="offer-item"> Prowadzimy sprzedaż wysyłkową na paletach.</li>
+        </ul>
+        
+        
+        <!-- <div class="offer-item">🌟 Wyjątkowe warunki</div>        -->
+    </div>
+    <br>
+    <hr style="border: 0; height: 2px; background: linear-gradient(to right, #ff7e5f, #feb47b);">
+
+    <div class="product-list">
+        {% for product in products %}
+        <div class="product-card">
+            <h2>{{ forloop.counter }}. {{ product.brand }}  {{ product.tread }}   {{ product.size }} {% if product.is_retreaded %} Bieżnikowana {% else %}{% endif%} {% if product.is_incised %} Nacinana {% else %}{% endif%}</h2>
+            
+            {% if product.preferred_image %}
+            <img class="preferred-image" src="{{ product.preferred_image.image.url }}" 
+                alt="{{ product.brand }}" >
+            {% endif %}
+            <div class="image-section">
+            
+            <div class="product-images">
+                {% for img in product.images.all %}
+                    <img src="{{ img.image.url }}" alt="{{ product.brand }}" style="max-width:220px; margin-top:10px;">
+                {% empty %}
+                    <p>Brak zdjęć</p>
+                {% endfor %}
+            </div>
+            </div>
+            <div class="defects-section">
+            <p>Nr id produktu: {{product.id}}</p>
+            <p>Cena netto: {{ product.net_price|default:"Brak" }} zł</p>
+            <p>Min. gł. bieżnika {{product.tread_depth_min}} mm</p>
+            <p>Max. gł. bieżnika {{product.tread_depth_max}} mm</p>
+            <p>Data produkcji: {{product.dot}}r</p>
+            </div>
+            
+            
+            <div>
+            <h3>Porównanie z nową oponą</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nasza opona </th>
+                        <th>Nowa {{product.brand}} {{product.tread}} {{product.size}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if product.new_tire_tread_depth %}
+                    <tr>
+                        <td>Najpłytsze miejsce: {{product.tread_depth_min}} mm</td>
+                        <td>{{product.new_tire_tread_depth}} mm</td>
+                    </tr>
+                    {% endif %}
+                    {% if product.new_tire_price %}
+                    <tr>
+                        <td>{{product.net_price}} zł</td>
+                        <td>{{product.new_tire_price}} zł</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        
+
+        <div class="defects-section">
+            <h3>Uwagi:</h3>
+        
+            <ul class="defects-list">            
+                <br>
+                {% if product.is_tire_bead_damaged %}
+                <li>Uszkodzona stopka</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_incised%}
+                <li>Nacinana</li>
+                {% else %}
+                {% endif %}
+                
+                {% if product.is_incised%}
+                <li>Front repairs</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_front_heat_repair %}
+                <li>Naprawa czoła na gorąco</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_side_repair %}
+                <li>Naprawa boczna</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_visible_cracks %}
+                <li>Widoczne pęknięcia</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_braked %}
+                <li>Opona po hamowaniu</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_braked_repair %}
+                <li>Naprawa po hamulcu</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_shoulder_repair %}
+                <li>Naprawa barku</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_cosmetology %}
+                <li>Kosmetyka</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_toothed_out %}
+                <li>Wyząbkowana</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_retreaded %}
+                <li>Bieżnikowana</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_ruts %}
+                <li>Koleiny</li>
+                {% else %}
+                {% endif %}
+
+                {% if product.is_circumventional_cut %}
+                <li>Dodatkowy rowek</li>
+                {% else %}
+                {% endif %}
+
+            </ul>
+        </div>
+            <hr style="border: 0; height: 2px; background: linear-gradient(to right, #ff7e5f, #feb47b);">
+
+            
+
+            
+
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% endblock %}
+</main>
+<!-- {% for item in aggregates %}
+    <div style="padding:15px">
+      <tr>Rozmiar: {{ item.size }} Ilość:{{ item.quantity }}</tr>
+    
+    </div>
+    {% endfor %}
+{{ calculated_pallettes }} -->
+<div class="summary-section">
+    <h2>Podsumowanie oferty</h2>
+    
+
+    <div class="summary-grid">
+        <div class="summary-item">
+            <span>Liczba opon</span>
+            <strong>{{ products|length }}</strong>
+        </div>
+
+        <div class="summary-item highlight">
+            <span>Łączna wartość netto</span>
+            <strong>{{ total_value }} zł</strong>
+        </div>
+    </div>
+</div>
+
+<footer class="glass-footer">
+    <div class="footer-grid">
+        
+        <div class="footer-column">
+            <div class="footer-title">Dane firmy</div>
+            <p>Tirgum Mateusz Celej</p>
+            <p>ul. Armii Krajowej 6</p>
+            <p>42-690 Boruszowice</p>
+            <p>NIP: 6452547332</p>
+        </div>
+
+        <div class="footer-column">
+            <div class="footer-title">Kontakt</div>
+            <p>Tel: 733 456 474</p>
+            <p>Tel: 794 746 906</p>
+            <p>Email: biuro.tirgum@gmail.com</p>
+            <p>www.tirgum.pl</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 Tirgum. Wszystkie prawa zastrzeżone.
+    </div>
+</footer>
+
+
+</body>
+<div class="watermark">TIRGUM</div>
+</html>

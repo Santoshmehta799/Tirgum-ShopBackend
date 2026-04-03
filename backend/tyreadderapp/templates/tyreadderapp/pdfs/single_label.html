@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Info</title>
+        <style>
+        table {
+            width: 100%;
+        }
+
+        
+
+        .tyre_class{
+            font-size: 35px;            
+            font-weight:300;
+            text-align: right;  
+            padding-bottom: 10px;
+            
+        }
+        .brand {
+            font-size: 70px;
+            font-weight: bold;
+            height: 70px;
+            padding-top: 10px;
+
+        }
+
+        .tread {
+            height: 70px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+              
+
+        .tread_depth,
+        .dot {
+            font-size: 30px;
+        }
+
+        .size{
+            font-size: 70px;
+            text-align: center;
+            padding-top: 30px;
+            font-weight: bold;
+        } 
+        
+        .check {
+            font-size: 30px;
+        }
+
+        .net_price {
+            font-size: 80px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .net {
+            font-size: 20px;
+        }
+
+        .price_section {
+            text-align: center;
+            display: block;
+        }
+
+
+        
+
+        .qr-code {
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .id{
+            font-size: 55px;
+            font-weight: bold;                      
+            
+        }
+        
+        
+
+        
+        
+
+       
+
+            
+    
+        
+
+    </style>
+    </head>
+    <body>
+        <div>
+            <table>
+                <tr>
+                    <td class="id">id: {{ single_label.0.id }}  </td>
+                    <td class="tyre_class">klasa: {{ single_label.0.get_tyre_class }}</td>
+                </tr>
+            </table>
+           
+                                   
+            
+            
+            
+            <table>
+                <tr>
+                    <td colspan="2" class="brand">{{ single_label.0.brand}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tread">{{ single_label.0.tread }}</div>
+                        <div class="dot">Data prod: {{ single_label.0.dot}}</div>
+                        <div class="tread_depth">
+                            Bieznik: {{ single_label.0.tread_depth_min }} - {{single_label.0.tread_depth_max }} mm
+                        </div>
+                    </td>
+                    <td style="text-align: right">
+                        {% if single_label.0.tread.is_steer %}
+                        <div class="dot">Os: Sterujaca</div>{% endif %}
+                        {% if single_label.0.tread.is_drive %}
+                        <div class="dot">Os: Naped</div>{% endif %}
+                        {% if single_label.0.tread.is_trailer %}
+                        <div class="dot">Os: Naczepa</div>{% endif %}
+                    </td>
+                </tr>
+                
+            </table>
+            <div class="size">{{ single_label.0.size }}</div> 
+            <div class="col-md-12" style="text-align: center">
+                {% if qr_code_image %}
+                <img width="200px"
+                    src="data:image/png;base64,{{ qr_code_image }}"
+                    alt="QR Code">
+                {% else %}
+                <p></p>
+                {% endif %}
+            </div>
+            <div class="col-md-12">
+                <div class="bottom-section">
+                    <div class="price_section">
+                        <div class="size">{{ single_label.0.net_price }} <span
+                                class="check">zl netto</span></div>
+                        {# <div class="netto">zł netto</div>#}
+                    </div>
+                    
+                </div>
+                
+
+            </div>
+                         
+             
+        
+            
+            <table style="margin-top: 5px">
+                <tr>
+                    <td style="vertical-align: top;">
+                        <div class="check">
+                            {% if single_label.0.is_cosmetology == True %}
+                            * Kosmetyka{% endif %}
+                        </div>
+                        
+                        <div class="check">
+                            {% if single_label.0.front_repairs != 0 %}* Naprawy
+                            gwozdziowe:{{ single_label.0.front_repairs }}{%endif %}
+                        </div>
+                        <div class="check">
+                            {% if single_label.0.is_tire_bead_damaged == True %}
+                            * Ubytek stopki{% endif %}
+                        </div>
+                        <div class="check">
+                            {% if single_label.0.is_incised == True %} *
+                            Nacinana{% endif %}
+                        </div>
+                        <div class="check">
+                            {% if single_label.0.is_front_heat_repair == True %} *
+                            Nap. a gor. czoło{% endif %}
+                        </div>
+                        
+                        <div class="check">
+                            {% if single_label.0.is_side_repair == True %} *
+                            Naprawa boczna{% endif %}
+                        </div>
+                        <div class="check">
+                            {% if single_label.0.is_visible_cracks == True %} * Pekniecia{% endif %}
+                        </div>
+                        
+                        
+                        
+                        
+                    </td>
+                    <td style="vertical-align: top;">
+                        <div class="check">{% if single_label.0.is_braked == True %} * Hamulec{% endif %}</div>
+                        <div class="check">
+                            {% if single_label.0.is_braked_repair == True %} *
+                            Naprawa po hamulcu {% endif %}
+                        </div>
+                        <div class="check">
+                            {% if single_label.0.is_shoulder_repair == True %} *
+                            Naprawa barku{% endif %}
+                        </div>
+                        
+                        <div class="check">{% if single_label.0.is_ruts == True %} * Koleiny{% endif %}</div>
+                        
+                        
+                        <div class="check">
+                            {% if single_label.0.is_toothed_out == True %} *
+                            Wyzabkowana{% endif %}
+                        </div>
+                        <div class="check">
+                            {% if single_label.0.is_retreaded == True %} *
+                            Bieznikowana{% endif %}
+                        </div>
+                        
+                        
+                    </td>
+                </tr>
+            </table>
+           
+        </div>
+
+    </body>
+</html>

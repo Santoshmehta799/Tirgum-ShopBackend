@@ -1,0 +1,88 @@
+{% comment %}
+
+<link rel="stylesheet" href="{% static 'tyreadderapp/navbar.css' %}" />
+{% endcomment %}
+{% load static %}
+<style>
+  nav {
+  
+  
+   
+  color: black;
+  background-color: white;  
+}
+
+/* .logo-section {
+    width: 250px;  
+    background-color: beige;  
+} */
+
+.navbar-section {
+  width: 100%;
+  background-color: white;
+  height: 60px;
+  width: screen;
+  display: flex;
+  flex-direction: row; 
+  align-items: center;  
+}
+
+ul {
+  display: flex;
+  flex-direction: row;  
+  list-style-type: none;
+  row-gap: 2rem;
+  font-size: 30px;
+  justify-content: space-between; 
+  width: 80%;
+   
+}
+
+ul li {
+  height: 100%;
+}
+
+
+
+select {
+  width: 150px;
+  height: 30px;
+  text-align: center;
+  
+}
+
+
+
+</style>
+
+<nav>
+  {% comment %}
+    <div class="logo-section">
+      <a href={% url 'main' %} 
+        ><img src={% static 'tyreadderapp/logo.png'%} alt=""
+      /></a>
+    </div>
+  {% endcomment %}
+
+    <div class="navbar-section">
+      <ul name="" id="">
+        <li><a href="{% url 'tyreadderapp:main' %}">Main</a></li>
+        <li><a href="{% url 'tyreadderapp:shop' %}">Shop</a></li>
+        <li><a href="{% url 'tyreadderapp:workspace' %}">Workspace</a></li>
+        <li><a href="{% url 'tyreadderapp:form' %}">Form</a></li>
+        <li><a href="{% url 'olx:olx-dashboard' %}">OLX</a></li>
+
+        
+      </ul>
+    </div>
+    
+ 
+</nav>
+{% comment %}
+<ol>
+  <li><a href="">1</a></li>
+  <li><a href="{% url 'shop' %}">Dashboard</a></li>
+  <li><a href="{% url 'products_to_add' %}">Produkty do dodania</a></li>
+</ol>
+
+{% endcomment %}

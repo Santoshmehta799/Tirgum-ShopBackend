@@ -1,0 +1,91 @@
+
+
+.container {
+  flex-direction: column;
+  text-align: center;
+  padding: 30px;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  background-color: gray;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+}
+
+.section {
+  width: 50%;
+  height: 800px;
+}
+
+.left-section {
+  padding: 10px;
+}
+
+.right-section {
+  position: relative;
+  display: flex;
+  height: auto;
+  padding: 10px;
+}
+
+.table {
+  color: orange;
+  width: 600px;
+  height: auto;
+  position: absolute;
+}
+
+tr:nth-child(even) {
+  background-color: gray;
+  color: white;
+}
+
+tr {
+  height: 40px;
+  color: black;
+}
+
+td {
+  padding: 5px;
+}
+
+.picture {
+  width: 250px;
+  height: 250px;
+}
+
+.description-box {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 15px;
+  font-size: 20px;
+  height: auto;
+  border-width: 2px;
+  border-color: black;
+  border-style: solid;
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 100px;
+}
+
+.description-segment {
+  height: auto;
+  width: 100%;
+}
+
+.lead {
+  font-weight: bold;
+  text-align: left;
+}
+
+.label-section {
+  margin-top: 30px;
+}

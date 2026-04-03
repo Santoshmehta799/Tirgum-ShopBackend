@@ -1,0 +1,772 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} {% block title %}
+To Sell{% endblock %} {% block content %}
+<style>
+  /* General Styles */
+  body {
+    font-family: "Arial", sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  /* Top Section with Buttons and Options */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .controls label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .controls select {
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+
+  .controls .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+  }
+
+  /* Table Styles */
+  .table-responsive {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #343a40;
+    color: white;
+  }
+
+  th{
+    padding: 15px;
+  }
+  th,td {
+    /* padding: 15px; */
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 14px;
+  }
+
+  th {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  tbody tr:hover {
+    background-color: #e9ecef;
+  }
+
+  /* Checkboxes */
+  .form-check-input {
+    cursor: pointer;
+  }
+
+  /*TYRE SEARCH FORM*/
+  *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.form-container {
+  padding: 16px;
+  background: #f8f9fb;
+  border-radius: 12px;
+}
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Each field */
+.tyre-search-field {
+  flex: 0 0 160px; /* NO shrinking = no overlap */
+}
+
+/* Inputs */
+.tyre-search-form-control {
+  width: 100%;
+  height: 42px; /* force same height */
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #d0d5dd;
+  font-size: 14px;
+  background-color: #fff;
+  appearance: none; /* normalize styling */
+}
+
+.tyre-search-form-control:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* Buttons */
+.search-product-btn,
+.clear-product-btn {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.search-product-btn {
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-product-btn:hover {
+  background: #4338ca;
+}
+
+.clear-product-btn {
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #4338ca;
+  text-decoration: none;
+}
+
+/*IMAGE*/
+
+.product-image-cell {
+    width: 200px;
+    height: auto;
+    position: relative;
+    padding: 10px;
+  }
+
+  .image-container {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .thumbnail-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+  }
+
+  .enlarged-image-container {
+    width: 500px;
+    height: 500px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    top: -100px;
+    left: 50px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  .enlarged-image {
+    width: 100%;
+    max-width: 390px;
+    max-height: 390px;
+    object-fit: contain;
+  }
+
+  .image-container:hover .enlarged-image-container {
+    display: block;
+  }
+
+  .no-image {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #444;
+    z-index: 2;
+    color: white;
+}
+  
+
+
+  .create-pdf-btn{
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: #aa860e;
+  }
+  .tyre-search-field input[type="checkbox"] {
+    margin-right: 6px;
+    transform: scale(1.2);
+    vertical-align: middle;
+}
+
+
+
+
+  
+    
+</style>
+
+<div class="container">
+  <h1
+    style="
+      font-family: Arial, sans-serif;
+      color: white;
+      background-color: #4caf50;
+      padding: 10px;
+      border-radius: 5px;
+    "
+  >
+    Status: On Sale
+  </h1>
+
+  <!-- Controls Section -->
+  <div class="controls">
+    <div>
+      <label for="bulk-status">Change Status To:</label>
+      <!-- <select id="bulk-status" name="bulk-status">
+                {% for key, value in products.first.StatusChoices.choices %}
+                <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select> -->
+      <select id="bulk-status" name="bulk-status">
+        {% for key, value in status_choices %}
+        <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="button" id="bulk-update-button" class="btn btn-primary">
+      Update Selected
+    </button>
+    <button type="button" id="create-offer-button" class="create-pdf-btn">
+      Create PDF Offer
+    </button>
+  </div>
+
+  <div class="form-container">
+    <div class="form-container">
+      <form method="get" class="search-form">
+        <!-- Text inputs -->
+        <!-- {% for field in form %}
+          {% if field.field.widget.input_type != "checkbox" %}
+            <div class="tyre-search-field">
+              {{ field.label_tag }}
+              {{ field }}
+            </div>
+          {% endif %}
+        {% endfor %} -->
+        <div class="tyre-search-field">
+          {{ form.product_id.label_tag }}
+          {{ form.product_id }}
+      </div>
+      
+      <div class="tyre-search-field">
+          {{ form.brand.label_tag }}
+          {{ form.brand }}
+      </div>
+      
+      <div class="tyre-search-field">
+          {{ form.tread.label_tag }}
+          {{ form.tread }}
+      </div>
+      
+      <div class="tyre-search-field">
+          {{ form.size.label_tag }}
+          {{ form.size }}
+      </div>
+      
+      <div class="tyre-search-field">
+          {{ form.pair_name.label_tag }}
+          {{ form.pair_name }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.tread_remaining_min.id_for_label }}">Minimalny % bieżnika</label>
+        {{ form.tread_remaining_min }}
+      </div>
+
+      <div class="form-group">
+      <label for="{{ form.tread_remaining_max.id_for_label }}">Maksymalny % bieżnika</label>
+      {{ form.tread_remaining_max }}
+      </div>
+      
+    
+        <!-- Boolean checkboxes for tread type -->
+        <div class="tyre-search-field">
+          {{ form.is_steer }} {{ form.is_steer.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.is_drive }} {{ form.is_drive.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.is_trailer }} {{ form.is_trailer.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.only_pairs }} {{ form.only_pairs.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.no_side_repairs}} {{ form.no_side_repairs.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.no_incised}} {{ form.no_incised.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.no_retreaded}} {{ form.no_retreaded.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.only_retreaded}} {{ form.only_retreaded.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.is_brand_new_price}} {{ form.is_brand_new_price.label_tag }}
+        </div>
+        <div class="tyre-search-field">
+          {{ form.is_brand_new_tread}} {{ form.is_brand_new_tread.label_tag }}
+        </div>
+
+
+        
+
+        
+        
+    
+        <!-- Buttons -->
+        <button type="submit" class="search-product-btn">
+          🔍 Szukaj
+        </button>
+        <a href="{% url 'tyreadderapp:filter_on_sale' %}" class="clear-product-btn">
+          ✖ Wyczyść
+        </a>
+      </form>
+    </div>
+    
+  
+  
+
+  <!-- Table Section -->
+  <form id="bulk-update-form">
+    <!-- <div class="table-responsive"> -->
+      <div style="max-height:500px; ">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" id="select-all" />
+            </th>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Brand</th>
+            <th>Tread</th>
+            <th>Size</th>
+            <!-- <th>Status</th> -->
+            <th>Max Tread</th>
+            <th>Min Tread</th>
+            <th>BR New Tread</th>
+            <th>DOT</th>
+            <th>
+              <a style="color: white" href="?{% if query_string %}{{ query_string }}&{% endif %}{% if current_sort == 'price_asc' %}sort=price_desc{% else %}sort=price_asc{% endif %}">
+                Net Price
+                {% if current_sort == 'price_asc' %}
+                    🔼
+                {% elif current_sort == 'price_desc' %}
+                    🔽
+                {% endif %}
+            </a>
+            </th>
+            
+            <th>BR New Price</th>
+            
+            <th>
+              <a style="color: white"
+                href="?{% if query_string %}{{ query_string }}&{% endif %}sort=pair_asc">
+                Pair name 🔼
+              </a>
+            </th>
+
+            <th>Defects</th>
+            <th>Magazyn</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in page_obj %}
+          <tr>
+            <td>
+              <input
+                type="checkbox"
+                class="product-checkbox"
+                value="{{ product.id }}"
+              />
+            </td>
+            <td>{{ product.id }}</td>
+            <!-- <td>
+              {% if product.main_image %}
+              <img
+                src="{{ product.main_image.image.url }}"
+                alt="Main Image"
+                width="80"
+                height="80"
+                style="object-fit: cover; border-radius: 5px"
+              />
+              {% else %} No Image {% endif %}
+            </td> -->
+            <td>
+              {% if product.main_image %}
+                <div class="image-container">
+                  <img
+                    src="{{ product.main_image.image.url }}"
+                    alt="Tire Image"
+                    class="thumbnail-image"
+                  />
+                  <div class="enlarged-image-container">
+                    <img
+                      src="{{ product.main_image.image.url }}"
+                      alt="Tire Image"
+                      class="enlarged-image"
+                    />
+                  </div>
+                </div>
+              {% else %}
+                <span class="no-image">No image</span>
+              {% endif %}
+            </td>
+
+            <td>{{ product.brand.name }}</td>
+            <td>
+              <div style="font-weight: bold;">{{product.tread}}</div>
+              <div style="display:flex; flex-direction:row; gap:4px; justify-content:center;margin-top: 5px;">
+              {% if product.tread.is_steer %}
+              <div style="background-color:green; padding:1px; border-radius: 50%; width: 20px;height: 20px;">S</div>
+              {% endif %}
+              {% if product.tread.is_drive %}
+              <div style="color:black;background-color:yellow; padding:1px; border-radius: 50%; width: 20px;height: 20px;">D</div>
+              {% endif %}
+              {% if product.tread.is_trailer %}
+              <div style="color:white;background-color:blue; padding:1px; border-radius: 50%; width: 20px;height: 20px;">T</div>
+              {% endif %}
+            </div>
+          </td>
+            <td>{{ product.size }}</td>
+            <!-- <td>{{ product.status }}</td> -->
+            <td>{{ product.tread_depth_max }}</td>
+            
+            
+            
+            <td>
+              <div style="display: flex; flex-direction: column; height: 100px; justify-content: space-between;">
+                
+                <!-- Mileage Section -->
+                <div style="flex: 0 0 auto; overflow: hidden;">
+                  {% if product.assessed_potential_mileage %}
+                    {% with product.assessed_potential_mileage.items|length as axis_count %}
+                      {% for tyre_type, mileage in product.assessed_potential_mileage.items %}
+                        <p style="margin:0; font-size:{% if axis_count > 1 %}smaller{% else %}small{% endif %}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                          {{ tyre_type|capfirst }}: {% widthratio mileage.0 1000 1 %} – {% widthratio mileage.1 1000 1 %} tys.
+                        </p>
+                      {% endfor %}
+                    {% endwith %}
+                  {% else %}
+                    <p style="margin:0; font-size: small;">No mileage.</p>
+                  {% endif %}
+                </div>
+            
+                <!-- Min Tread -->
+                <div style="flex: 0 0 auto; display: flex; justify-content: center; align-items: center;">
+                  {{ product.tread_depth_min }}
+                </div>
+            
+                <!-- Tread % Remaining -->
+                <div style="flex: 0 0 auto; background-color: yellow; display: flex; justify-content: center; align-items: center;">
+                  {% if product.calculate_tread_remaining_percent %}
+                    {{ product.calculate_tread_remaining_percent }}%
+                  {% else %}
+                    
+                  {% endif %}
+                </div>
+            
+              </div>
+            </td>
+            
+            <td>
+              {{ product.new_tread_depth|default:"---" }}
+            </td>
+            
+            <td>{{ product.dot }}</td>
+            <td>
+              <div style="display: flex; flex-direction: column; height: 100px; justify-content: space-between;">
+                <div style="color:white">1</div>
+                <div style="flex: 0 0 auto; display: flex; justify-content: center; align-items: center;">
+                  {{ product.net_price }}
+                </div>
+                {% if product.calculate_percent_of_new_tyre_price %}
+                <div style="flex: 0 0 auto; background-color: yellow; display: flex; justify-content: center; align-items: center">
+                  {{product.calculate_percent_of_new_tyre_price}} %
+                </div>
+                {% else %}
+                <div style="color: white;">brak</div>
+                {% endif %}
+              </div>
+              
+            </td>
+
+            <td>
+              
+              {{ product.tread_character_price|default:"---" }}
+              
+              
+            </td>
+            
+            
+
+
+            <td>{{ product.pair.name }}</td>
+            <td>              
+              {% if product.is_tire_bead_damaged %}
+              <p>Stopka</p>
+              {% endif %}
+              {% if product.is_incised %}
+              <p>Nacin</p>
+              {% endif %}
+              {% if product.front_repairs %}
+              <p>{{product.front_repairs}} gwoźd.</p>
+              {% endif %}
+              {% if product.is_front_heat_repair %}
+              <p>Czoło</p>
+              {% endif %}
+              {% if product.is_side_repair %}
+              <p>Bok</p>
+              {% endif %}
+              {% if product.is_visible_cracks %}
+              <p>Spękana</p>
+              {% endif %}
+              {% if product.is_braked %}
+              <p>Hamulec</p>
+              {% endif %}
+              {% if product.is_braked_repair %}
+              <p>Ham. nap.</p>
+              {% endif %}
+              {% if product.is_shoulder_repair %}
+              <p>Bark</p>
+              {% endif %}
+              {% if product.is_cosmetology %}
+              <p>Kosmetyka</p>
+              {% endif %}
+              {% if product.is_toothed_out %}
+              <p>Ząbek</p>
+              {% endif %}
+              {% if product.is_retreaded %}
+              <p>Bieżnik.</p>
+              {% endif %}
+              {% if product.is_ruts %}
+              <p>Koleeiny.</p>
+              {% endif %}
+              {% if product.is_circumventional_cut %}
+              <p>Dodatk. rowek.</p>
+              {% endif %}          
+              
+            </td>
+            <td>
+              <div class="flex flex-col items-start">
+              {% if product.warehouse %}
+              <div style="color: darkgreen;">{{ product.warehouse }} </div>
+              {% else %} 
+              {% endif %}
+
+              {% if product.rack %} 
+              <div>{{ product.rack }}</div> 
+              {% else %} 
+              {% endif %}
+
+              {% if product.row %} 
+              <div>{{ product.row }}</div>
+              {% else %} 
+              {% endif %}
+
+              {% if product.staple %}
+              <div>{{ product.staple }}</div>  
+              {% else %} 
+              {% endif %}
+            </div>
+            </td>
+            <td>
+             
+              <a href="/tyreadderapp/shop/{{product.pk}}"class="btn btn-link">Link</a>
+              
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div style="margin-top: 20px; text-align: center">
+        {% for num in page_obj.paginator.page_range %} 
+        {% if page_obj.number == num %}
+        <strong>{{ num }}</strong>
+        {% else %}
+        <a href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}">
+          {{ num }}
+        </a>
+        {% endif %} {% endfor %}
+      </div>
+    </div>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Helper function to get selected product IDs
+    function getSelectedIds() {
+      const ids = [];
+      $(".product-checkbox:checked").each(function () {
+        ids.push($(this).val());
+      });
+      return ids;
+    }
+
+    // BULK STATUS UPDATE
+    $(document).on("click", "#bulk-update-button", function () {
+      const selectedIds = getSelectedIds();
+      console.log("Selected IDs for status update:", selectedIds);
+      const newStatus = $("#bulk-status").val();
+
+      if (selectedIds.length === 0) {
+        alert("Please select at least one product.");
+        return;
+      }
+
+      $.ajax({
+        url: "/tyreadderapp/bulk_update_status/",
+        method: "POST",
+        data: {
+          product_ids: selectedIds.join(","), // comma-separated IDs
+          status: newStatus,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          if (response.success) {
+            alert(
+              `Status updated successfully! Updated IDs: ${selectedIds.join(
+                ", "
+              )}`
+            );
+            location.reload(); // Refresh page to reflect changes
+          } else {
+            alert("Failed to update status.");
+          }
+        },
+        error: function () {
+          alert("Error occurred while updating status.");
+        },
+      });
+    });
+
+    // SELECT ALL CHECKBOX
+    $(document).ready(function () {
+      $("#select-all").on("change", function () {
+        const isChecked = $(this).is(":checked");
+        $(".product-checkbox").prop("checked", isChecked);
+      });
+    });
+
+
+    //CRATE OFFER IN PDF BTN
+    
+    $("#create-offer-button").on("click", function () {
+    const selectedIds = getSelectedIds();
+
+    if (selectedIds.length === 0) {
+        alert("Please select at least one product to create an offer.");
+        return;
+    }
+
+    const params = new URLSearchParams({
+        product_ids: selectedIds.join(",")
+    });
+
+    window.location.href = `/tyreadderapp/create-pdf-offer/?${params.toString()}`;
+});
+
+
+
+    
+
+    
+  
+  </script>
+</div>
+{% endblock %}

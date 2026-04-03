@@ -1,0 +1,91 @@
+{% load static %} 
+
+  <style>
+    {% include 'tyreadderapp/pdfs/pdf.css' %}
+  </style>
+
+
+
+
+
+<div>
+    <!-- <h1>Etykiety</h1> -->
+    
+    <div class="container">
+      
+        <div>
+          {% for label in labels %}
+          <div class="label">
+            <div class="columns">
+              <div class="left-col brand">{{label.brand}}</div>
+              <div class="right-col">id: {{label.width}}</div>
+            </div>
+            <div class="tread">{{label.tread}}</div>
+            <div class="size">{{label.width}}/65 R22.5</div>        
+            <br>
+            <div class="row">
+              <div>DOT: {{label.dot}}</div>
+              <div>Bieżnik MIN: {{label.tread_depth_min}}</div>
+              <div>Bieżnik MAX: {{label.tread_depth_max}}</div>
+            </div> 
+            <br>
+    
+          <div class="checks">
+            <!-- <div>Uszkodzona stopka:{{label.is_tire_bead_damaged}}</div> -->
+            {% if label.is_tire_bead_damaged == True %}
+            *SZCZYPNIĘTA STOPKA<br>
+            {% endif %}   
+            <!-- <div>Nacinana:{{label.is_incised}}</div> -->
+            {% if label.is_incised == True %}
+            *NACINANA<br>
+            {% endif %}   
+            
+            <!-- <div>Naprawa gwoździowa:{{label.is_front_repair}}</div> -->
+            {% if label.is_front_repair == True %}
+            *NAPRAWA GWOŹDZIOWA<br>
+            {% endif %}        
+    
+            <!-- <div>Naprawa boczna_1:{{label.is_side_repair_one}}</div> -->
+            {% if label.is_side_repair_one == True %}
+            *NAPRAWA BOCZNA 1<br>
+            {% endif %}  
+            <!-- <div>Naprawa boczna 2:{{label.is_side_repair_two}}</div> -->
+            {% if label.is_side_repair_two == True %}
+            *NAPRAWA BOCZNA 2<br>
+            {% endif %}  
+
+            <!-- <div>Pęknięcia:{{label.is_visible_cracks}}</div> -->
+            {% if label.is_visible_cracks == True %}
+            *PĘKNIĘCIA<br>
+            {% endif %}
+            
+            <!-- <div>Hamulec:{{label.is_braked}}</div> -->
+            {% if label.is_braked == True %}
+            *HAMULEC<br>
+            {% endif %}
+            <!-- <div>Kosmetyka:{{label.is_cosmetology}}</div> -->
+            {% if label.is_cosmetology == True %}
+            *KOSMETYKA<br>
+            {% endif %}
+            <div>
+              <!-- Wyząbkowana:{{label.is_toothed_out}} -->
+              {% if label.is_toothed_out == True%}
+              *WYZĄBKOWANA<br>
+              {% endif %}
+              
+            </div>
+          </div>
+          <br/>
+          <div class="price-box">
+            <div class="price">{{label.net_price}} </div> <div class="netto">zł netto </div>
+          </div>
+            
+          </div>
+       
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+

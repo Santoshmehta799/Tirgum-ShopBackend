@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Info</title>
+    <style>
+        table {
+            width: 100%;
+        }
+        .label-container {
+            page-break-after: always;
+            height: 100vh;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .tyre_class {
+            font-size: 35px;
+            font-weight: 300;
+            text-align: right;
+            padding-bottom: 10px;
+        }
+        .brand {
+            font-size: 60px;
+            font-weight: bold;
+            height: 60px;
+            padding-top: 10px;
+        }
+        .tread {
+            height: 60px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .tread_depth,
+        .dot {
+            font-size: 30px;
+        }
+        .size {
+            font-size: 60px;
+            text-align: center;
+            padding-top: 20px;
+            font-weight: bold;
+        }
+        .check {
+            font-size: 30px;
+        }
+        .net_price {
+            font-size: 70px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .net {
+            font-size: 20px;
+        }
+        .price_section {
+            text-align: center;
+            display: block;
+        }
+        .qr-code {
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .id {
+            font-size: 55px;
+            font-weight: bold;
+        }
+    </style>
+    <style media="print">
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            margin: 0;
+        }
+        .label-container {
+            page-break-after: always;
+            height: 100vh;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% for label in labels %}
+    <div class="label-container">
+        <table>
+            <tr>
+                <td class="id">id: {{ label.product.id }}</td>
+                <td class="tyre_class">klasa: {{ label.product.get_tyre_class }}</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td colspan="2" class="brand">{{ label.product.brand }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="tread">{{ label.product.tread }}</div>
+                    <div class="dot">Data prod: {{ label.product.dot }}</div>
+                    <div class="tread_depth">
+                        Bieznik: {{ label.product.tread_depth_min }} - {{ label.product.tread_depth_max }} mm
+                    </div>
+                </td>
+                <td style="text-align: right">
+                    {% if label.product.tread.is_steer %}
+                    <div class="dot">Os: Sterujaca</div>{% endif %}
+                    {% if label.product.tread.is_drive %}
+                    <div class="dot">Os: Naped</div>{% endif %}
+                    {% if label.product.tread.is_trailer %}
+                    <div class="dot">Os: Naczepa</div>{% endif %}
+                </td>
+            </tr>
+        </table>
+        <div class="size">{{ label.product.size }}</div>
+        <div class="col-md-12" style="text-align: center">
+            {% if label.qr_code_image %}
+            <img width="200px" src="data:image/png;base64,{{ label.qr_code_image }}" alt="QR Code">
+            {% else %}
+            <p></p>
+            {% endif %}
+        </div>
+        <div class="col-md-12">
+            <div class="bottom-section">
+                <div class="price_section">
+                    <div class="size">{{ label.product.net_price }} <span class="check">zl netto</span></div>
+                </div>
+            </div>
+        </div>
+        <table style="margin-top: 5px">
+            <tr>
+                <td style="vertical-align: top;">
+                    <div class="check">
+                        {% if label.product.is_cosmetology %}* Kosmetyka{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.front_repairs != 0 %}* Naprawy gwozdziowe: {{ label.product.front_repairs }}{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.is_tire_bead_damaged %}* Ubytek stopki{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.is_incised %}* Nacinana{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.is_side_repair %}* Naprawa boczna{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.is_visible_cracks %}* Pekniecia{% endif %}
+                    </div>
+                </td>
+                <td style="vertical-align: top;">
+                    <div class="check">{% if label.product.is_braked %}* Hamulec{% endif %}</div>
+                    <div class="check">
+                        {% if label.product.is_braked_repair %}* Naprawa po hamulcu{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.is_shoulder_repair %}* Naprawa barku{% endif %}
+                    </div>
+                    <div class="check">{% if label.product.is_ruts %}* Koleiny{% endif %}</div>
+                    <div class="check">
+                        {% if label.product.is_toothed_out %}* Wyzabkowana{% endif %}
+                    </div>
+                    <div class="check">
+                        {% if label.product.is_retreaded %}* Bieznikowana{% endif %}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% endfor %}
+</body>
+</html>

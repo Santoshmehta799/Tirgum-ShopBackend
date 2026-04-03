@@ -1,0 +1,394 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} 
+{% block title %} To Add{% endblock %} {% block content %}
+<style>
+  /* General Styles */
+  body {
+    font-family: "Arial", sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  /* Top Section with Buttons and Options */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .controls label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .controls select {
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+
+  .controls .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-url {
+    background-color: darkgreen;
+    padding: 20px;
+  }
+
+  .btn-edit {
+    background-color: darkblue;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 15px;
+  }
+
+  .btn-success {
+    background-color: gray;
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Table Styles */
+  .table-responsive {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #343a40;
+    color: white;
+  }
+
+  th,
+  td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 14px;
+  }
+
+  th {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  tbody tr:hover {
+    background-color: #e9ecef;
+  }
+
+  /* Checkboxes */
+  .form-check-input {
+    cursor: pointer;
+  }
+</style>
+
+<div class="container">
+  <h1
+    style="
+      font-family: Arial, sans-serif;
+      color: white;
+      background-color: #4caf50;
+      padding: 10px;
+      border-radius: 5px;
+    "
+  >
+    Opony do dodania
+  </h1>
+
+  <!-- Controls Section -->
+  <div class="controls">
+    <div>
+      <label for="bulk-status">Zmień status na:</label>
+      <select id="bulk-status" name="bulk-status">
+        {% for key, value in products.first.StatusChoices.choices %}
+        <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="button" id="bulk-update-button" class="btn btn-primary">
+      Update Selected
+    </button>
+    <button type="button" id="create-otomoto-ad" class="btn btn-success">
+      Create Otomoto Ad
+    </button>
+  </div>
+
+  <!-- Table Section -->
+  <form
+    method="POST"
+    action="{% url 'tyreadderapp:process_selected_products' %}"
+    id="bulk-update-form"
+  >
+    {% csrf_token %}
+    <div style="display: flex; justify-content: flex-end; margin: 15px 0">
+      <button
+        type="submit"
+        name="action"
+        value="bulk_label_printing"
+        class="btn btn-success"
+      >
+        Wydrukuj etykietę
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" id="select-all" class="form-check-input" />
+            </th>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Brand</th>
+            <th>Tread</th>
+            <th>Size</th>
+            <!-- <th>Status</th> -->
+            <!-- <th>DOT</th> -->
+            <th>Net Price</th>
+            
+            <th>Supplier Price</th>
+            <th>BR new price</th>
+            <th>Data i godzina dodania</th>
+            <th>Czy etykieta wydrukowana</th>
+            <!-- <th>Otomoto Advert ID</th> -->
+            <th>Edytuj</th>
+            <!-- <th>Wydrukuj etykietę</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr>
+            <td>
+              <input
+                type="checkbox"
+                class="product-checkbox"
+                name="selected_product"
+                value="{{ product.id }}"
+              />
+            </td>
+            <td>{{ product.id }}</td>
+            <td>
+              {% if product.main_image %}
+              <img
+                src="{{ product.main_image.image.url }}"
+                alt="Main Image"
+                width="80"
+                height="80"
+                style="object-fit: cover; border-radius: 5px"
+              />
+              {% else %} No Image {% endif %}
+            </td>
+            <td>{{ product.brand}}</td>
+            <td>{{ product.tread}}</td>
+            <td>{{ product.size}}</td>
+            <!-- <td>{{ product.status }}</td> -->
+            <!-- <td>{{ product.dot }}</td> -->
+            <td>{{ product.net_price }}</td>
+            
+            <!-- <td>{{ product.supplier_price}}</td> -->
+            <td
+              style="background-color: {% if product.supplier_price != 0.00 %}green{% else %}transparent{% endif %};"
+            >
+              {{ product.supplier_price }}
+            </td>
+            <td>
+              {% if product.new_tire_price %}
+              {{ product.new_tire_price }}
+              {% else %}
+              {% endif %}
+            </td>
+
+            <!-- <td>{{product.is_label_printed}}</td> -->
+            <!-- <td>
+                            {% if product.is_label_printed %}
+                              <img src="{% static 'tyreadderapp/check.png' %}" alt="Printed" width="40" height="40">
+                            {% else %}
+                              <img src="{% static 'tyreadderapp/red_cross.png' %}" alt="Not Printed" width="40" height="40">
+                            {% endif %}
+                          </td> -->
+                          <td>
+                            {{ product.created|date:"Y-m-d" }}<br />
+                            <small>{{ product.created|date:"H:i" }}</small>
+                          </td>
+            
+                          <td
+              style="background-color: {% if product.is_label_printed %}green{% else %}transparent{% endif %};"
+            >
+              {% if product.is_label_printed %}
+              <img
+                src="{% static 'tyreadderapp/check.png' %}"
+                alt="Printed"
+                width="40"
+                height="40"
+              />
+              {% else %}
+              <img
+                src="{% static 'tyreadderapp/red_cross.png' %}"
+                alt="Not Printed"
+                width="40"
+                height="40"
+              />
+              {% endif %}
+            </td>
+
+            <!-- <td
+              style="background-color: {% if product.otomoto_data.otomoto_advert_id %}green{% else %}transparent{% endif %};"
+            >
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.otomoto_advert_id }} 
+              {% else %} N/A 
+              {% endif %}
+            </td> -->
+            <td>
+              <a
+                href="{% url 'tyreadderapp:edit-detail' product.pk %}"
+                class="btn btn-edit btn-sm"
+                >Edytuj</a
+              >
+            </td>
+            <!-- <td>
+                            <a href="{% url 'tyreadderapp:single_label' product.pk %}" class="btn btn-print btn-sm">Drukuj</a>
+                        </td> -->
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Helper function to get selected product IDs
+  function getSelectedIds() {
+    const ids = [];
+    $(".product-checkbox:checked").each(function() {
+      ids.push($(this).val());
+    });
+    return ids;
+  }
+
+  // BULK STATUS UPDATE
+  $(document).on("click", "#bulk-update-button", function () {
+    const selectedIds = getSelectedIds();
+    console.log("Selected IDs for status update:", selectedIds);
+    const newStatus = $("#bulk-status").val();
+
+    if (selectedIds.length === 0) {
+      alert("Please select at least one product.");
+      return;
+    }
+
+    $.ajax({
+      url: "/tyreadderapp/bulk_update_status/",
+      method: "POST",
+      data: {
+        product_ids: selectedIds.join(","), // comma-separated IDs
+        status: newStatus,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function(response) {
+        if (response.success) {
+          alert(`Status updated successfully! Updated IDs: ${selectedIds.join(", ")}`);
+          location.reload(); // Refresh page to reflect changes
+        } else {
+          alert("Failed to update status.");
+        }
+      },
+      error: function() {
+        alert("Error occurred while updating status.");
+      }
+    });
+  });
+
+  // BULK CREATE OTOMOTO ADS
+  $(document).on("click", "#create-otomoto-ad", function () {
+    const selectedIds = getSelectedIds();
+
+    if (selectedIds.length === 0) {
+      alert("Please select at least one product.");
+      return;
+    }
+
+    $.ajax({
+      url: "/tyreadderapp/bulk_create_otomoto_ads/",
+      method: "POST",
+      data: {
+        product_ids: selectedIds.join(","),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function(response) {
+        if (response.success) {
+          alert("Otomoto ads marked as created! Updated IDs: " + selectedIds.join(", "));
+          location.reload();
+        } else {
+          alert("Failed to update Otomoto flag.");
+        }
+      },
+      error: function() {
+        alert("Error occurred while updating Otomoto flag.");
+      }
+    });
+  });
+
+  // SELECT ALL CHECKBOX
+  $(document).ready(function () {
+    $("#select-all").on("change", function () {
+      const isChecked = $(this).is(":checked");
+      $(".product-checkbox").prop("checked", isChecked);
+    });
+  });
+</script>
+
+</div>
+{% endblock %}

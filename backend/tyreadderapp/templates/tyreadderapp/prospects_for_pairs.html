@@ -1,0 +1,330 @@
+{% extends "tyreadderapp/base/base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: white;
+  }
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .product-image-cell {
+    width: 200px;
+    height: auto;
+    position: relative;
+    padding: 10px;
+  }
+
+  .image-container {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .thumbnail-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+  }
+
+  .enlarged-image-container {
+    width: 400px;
+    height: 400px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    top: -100px;
+    left: 50px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+
+  .enlarged-image {
+    width: 100%;
+    max-width: 390px;
+    max-height: 390px;
+    object-fit: contain;
+  }
+
+  .image-container:hover .enlarged-image-container {
+    display: block;
+  }
+
+  .no-image {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+  }
+
+  .table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .table thead th {
+    background-color: #555;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #fc8803;
+  }
+
+  .table tbody td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .separator-row td {
+    height: 1px;
+    background-color: #fc8803;
+    padding: 0;
+  }
+
+  .pair-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  .pair-select:focus {
+    border-color: #fc8803;
+    outline: none;
+  }
+
+  .submit-button {
+    background-color: purple;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 15px 0;
+  }
+  .add-pairs-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .table-responsive {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  .submit-button:hover {
+    background-color: #e67a02;
+  }
+
+  .submit-button:active {
+    background-color: #d67202;
+  }
+
+  .pair-select option.empty-pair {
+    color: green;
+    font-weight: bold;
+  }
+
+  .button-wrapper {
+    margin: 20px 0;
+    padding: 0 10px;
+  }
+
+  td {
+    text-align: center;
+  }
+
+  /* === Row background colors by pair === */
+  .pair-bg-1 { background-color: #8f8786; }
+  .pair-bg-2 { background-color: #744082; }
+  .pair-bg-3 { background-color: #8f8786; }
+  .pair-bg-4 { background-color:#744082; }
+  .pair-bg-5 { background-color: #8f8786; }
+  .pair-bg-none { background-color: #FFFFFF; } /* for unpaired products */
+</style>
+
+<h1>Propozycje</h1>
+
+{% if groups %}
+  {% for group in groups %}
+    <section style="margin-bottom: 2rem">
+      <h2>
+        {{ group.brand.name }} | {{ group.tread.name }} | {{ group.size.size }}
+      </h2>
+
+      <div class="button-wrapper">
+        <form method="POST" action="{% url 'tyreadderapp:create_missing_pairs' %}">
+          {% csrf_token %}
+          <button type="submit" class="add-pairs-btn">
+            ➕ Dodaj nowe pary
+          </button>
+        </form>
+      </div>
+
+      {% if messages %}
+  {% for message in messages %}
+    <div style="margin: 10px 0; color: green;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+
+      <form method="POST" action="{% url 'tyreadderapp:prospects_for_pairs' %}">
+        {% csrf_token %}
+
+        
+
+        <div class="button-wrapper">
+          <button type="submit" class="submit-button">Save Pairs</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table border="1" cellpadding="5" cellspacing="0" class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Is NEW</th>
+                <th>Image</th>
+                <th>Brand</th>
+                <th>Tread</th>
+                <th>Size</th>
+                <th>Cena netto</th>
+                <th>Uszk. stopka</th>
+                <th>Nacinana</th>
+                <th>Napr. czołowa</th>
+                <th>Is Front Heat Repair</th>
+                <th>Is Side Repair</th>
+                <th>Bieżnik min</th>
+                <th>Bieżnik max</th>
+                <th>Dobierz parę</th>
+                <th>Dot</th>
+                <th>Edit</th>
+                <th>Is OLX</th>
+                <th>OLX status</th>
+                <th>Check</th>
+                <th>Dodana</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% regroup group.products by pair.name as pair_groups %}
+              {% for pair_group in pair_groups %}
+                {% if pair_group.grouper %}
+                  {% cycle 'pair-bg-1' 'pair-bg-2' 'pair-bg-3' 'pair-bg-4' 'pair-bg-5' as pair_color silent %}
+                {% endif %}
+                {% for product in pair_group.list %}
+                  <tr class="{% if pair_group.grouper %}{{ pair_color }}{% else %}pair-bg-none{% endif %}">
+                    <td>{{ product.id }}</td>
+                    <td>
+                      {% now "U" as now_ts %}
+                      {% with created_ts=product.created|date:"U" %}
+                        {% with threshold=now_ts|add:"-432000" %}
+                          {% if created_ts|floatformat:0 >= threshold|floatformat:0 %}
+                            <span style="color: red; font-weight: bold">NOWA</span>
+                          {% endif %}
+                        {% endwith %}
+                      {% endwith %}
+                    </td>
+                    <td>
+                      {% if product.main_image %}
+                        <div class="image-container">
+                          <img
+                            src="{{ product.main_image.image.url }}"
+                            alt="Tire Image"
+                            class="thumbnail-image"
+                          />
+                          <div class="enlarged-image-container">
+                            <img
+                              src="{{ product.main_image.image.url }}"
+                              alt="Tire Image"
+                              class="enlarged-image"
+                            />
+                          </div>
+                        </div>
+                      {% else %}
+                        <span class="no-image">No image</span>
+                      {% endif %}
+                    </td>
+
+                    <td>{{ product.brand.name }}</td>
+                    <td>{{ product.tread.name }}</td>
+                    <td>{{ product.size }}</td>
+                    <td>{{ product.net_price }}</td>
+                    <td>{% if product.is_tire_bead_damaged %}<div class="dot"></div>{% endif %}</td>
+                    <td>{% if product.is_incised %}<div class="dot"></div>{% endif %}</td>
+                    <td>{{ product.front_repairs }}</td>
+                    <td>{% if product.is_front_heat_repair %}<div class="dot"></div>{% endif %}</td>
+                    <td>{% if product.is_side_repair %}<div class="dot"></div>{% endif %}</td>
+                    <td>{{ product.tread_depth_min }}</td>
+                    <td>{{ product.tread_depth_max }}</td>
+
+                    <td>
+                      <select name="pair_{{ product.pk }}" class="pair-select">
+                        <option value="">Select Pair</option>
+                        {% for pair in pairs %}
+                          <option
+                            value="{{ pair.pk }}"
+                            {% if product.pair and product.pair.pk == pair.pk %}selected{% endif %}
+                            class="{% if pair.product_count == 0 %}empty-pair{% endif %}"
+                          >
+                            Para nr:{{ pair.name }} ({{ pair.product_count }} tire{{ pair.product_count|pluralize }})
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </td>
+
+                    <td>{{ product.dot }}</td>
+                    <td><a href="/tyreadderapp/shop/{{ product.pk }}/edit">Edit</a></td>
+                    <td>{% if product.is_olx %}<div class="dot"></div>{% endif %}</td>
+                    <td>{{ product.get_olx_status_display }}</td>
+                    <td><a href="/tyreadderapp/shop/{{ product.pk }}">Check</a></td>
+                    <td>
+                      {{ product.created|date:"Y-m-d" }}<br />
+                      <small>{{ product.created|date:"H:i" }}</small>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </section>
+    <hr />
+  {% endfor %}
+{% else %}
+  <p>No groups with multiple products found.</p>
+{% endif %}
+
+{% endblock %}

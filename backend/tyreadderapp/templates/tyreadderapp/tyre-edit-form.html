@@ -1,0 +1,532 @@
+{% extends "tyreadderapp/base/base.html" %} 
+
+{% load static %} 
+
+
+{% block content %}
+
+<style>
+  .filter_to_add_btn{
+    display: inline-block;
+    margin: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .title-box-input{
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical; /* Allow vertical resizing of the text area */
+  }
+  .text-box-input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical; /* Allow vertical resizing of the text area */
+    height: 300px; /* <-- Add this line or increase it */
+    overflow: auto; 
+  }
+  .text-box-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1.5em; /* Adjust font size */
+    display: flex;
+    align-items: center; /* Center vertically */
+  }
+
+  .form-container {
+    width: 80%;
+    margin: auto;
+    display: flex flex-column;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 20px; /* Add padding for spacing */
+  }
+
+  .form-group {
+    flex-basis: 48%; /* Adjust the width of each form group */
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .form-group:last-child {
+    margin-left: 4%; /* Add space between the two form groups */
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    background-color: gray;
+    padding: 15px;
+    column-gap: 20px;
+    justify-content: center;
+  }
+
+  input {
+    height: 50px;
+    width: 100px;
+  }
+
+ 
+  .maindata-container {
+    height: 700px;
+    width: 400px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    align-items: center;
+    padding: 20px;
+    border-radius: 15px;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .label {
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+  }
+
+  .item select {
+    width: 100%;
+    background-color: lightgray;
+    height: 60px;
+    color: black;
+    font-size: 30px;
+    border-radius: 12px;
+  }
+
+  .defects-container {
+    height: 700px;
+    width: 400px;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    row-gap: 15px;
+    padding: 20px;
+    border-radius: 15px;
+    justify-content: space-between;
+    background-color: purple;
+  }
+
+  .side {
+    width: 100%;
+  }
+  .checkbox-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    height: 100px;
+  }
+  .checkbox-label {
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .rest-container {
+    height: 500px;
+    padding: 20px;
+    width: 400px;
+    background-color: yellow;
+    display: flex;
+    flex-direction: row;
+    row-gap: 15px;
+    border-radius: 15px;
+    justify-content: space-between;
+  }
+
+  .two_row_section {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    width: 400px;
+  }
+
+  .olx-container {
+    height: 100%;
+    padding:20px;
+    width: 400px;
+    background-color: green;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .change-btn-container {
+    display:flex;
+    flex-direction: row;
+  }
+
+  button {
+    background-color: red;
+    border-radius: 12px;
+    color: white;
+    height: 50px;
+    width: 100px;
+  }
+
+</style>
+
+<a class="filter_to_add_btn" href="{% url 'tyreadderapp:filter_to_add' %}">Opony do dodania</a>
+
+<div class="container">
+  <form id="post_form" action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+
+{% if messages %}
+  <ul>
+  {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+  {% empty %}
+    <li>No messages found.</li>
+  {% endfor %}
+  </ul>
+{% else %}
+  
+{% endif %}
+    {% if form.errors %}
+        <div style="color: red; background: #ffe6e6; padding: 10px; margin: 10px 0;">
+            <h3>❌ Form Errors:</h3>
+            {{ form.errors }}
+        </div>
+    {% endif %}
+    <br /><br />
+
+    <div class="container">
+      <div class="maindata-container">
+
+        {% if form.status %}
+        <div class="item">
+          <div class="label">{{form.status.label}}</div>
+          <div>{{form.status}}</div>
+        </div>
+        {% endif %} 
+
+        {% if form.brand %}
+        <div class="item">
+          <div class="label">{{form.brand.label}}</div>
+          <div>{{form.brand}}</div>
+        </div>
+        {% endif %} 
+        
+        {% if form.tread %}
+        <div class="item">
+          <div class="label">{{form.tread.label}}</div>
+          <div>{{form.tread}}</div>
+        </div>
+        {% endif %} 
+        
+        {% if form.size %}
+        <div class="item">
+          <div class="label">{{form.size.label}}</div>
+          <div>{{form.size}}</div>
+        </div>
+        {% endif %} 
+        
+        {% if form.pair %}
+        <div>
+          <div class="label">{{form.pair.label}}</div>
+          <div>{{form.pair}}</div>
+        </div>
+        {% endif %} 
+
+        
+        
+        {% if form.front_repairs %}
+        <div class="item">
+          <div class="label">{{form.front_repairs.label}}</div>
+          <div>{{form.front_repairs}}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="defects-container">
+        <div class="side">
+          {% if form.is_tire_bead_damaged %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">
+              {{form.is_tire_bead_damaged.label}}
+            </div>
+            <div>{{form.is_tire_bead_damaged}}</div>
+          </div>
+          {% endif %}
+
+            {% if form.is_front_heat_repair %}
+                <div class="checkbox-item">
+                    <div class="checkbox-label">{{ form.is_front_heat_repair.label }}</div>
+                    <div>{{ form.is_front_heat_repair }}</div>
+                </div>
+            {% endif %}
+
+
+           {% if form.is_side_repair %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_side_repair.label}}</div>
+            <div>{{form.is_side_repair}}</div>
+          </div>
+          {% endif %} 
+          
+          {% if form.is_braked %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_braked.label}}</div>
+            <div>{{form.is_braked}}</div>
+          </div>
+          {% endif %} {% if form.is_shoulder_repair %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_shoulder_repair.label}}</div>
+            <div>{{form.is_shoulder_repair}}</div>
+          </div>
+          {% endif %} {% if form.is_retreaded %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_retreaded.label}}</div>
+            <div>{{form.is_retreaded}}</div>
+          </div>
+          {% endif %} {% if form.is_ruts %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_ruts.label}}</div>
+            <div>{{form.is_ruts}}</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="side">
+          {% if form.is_incised %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_incised.label}}</div>
+            <div>{{form.is_incised}}</div>
+          </div>
+          {% endif %} {% if form.is_visible_cracks %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_visible_cracks.label}}</div>
+            <div>{{form.is_visible_cracks}}</div>
+          </div>
+          {% endif %} {% if form.is_braked_repair %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_braked_repair.label}}</div>
+            <div>{{form.is_braked_repair}}</div>
+          </div>
+          {% endif %} {% if form.is_cosmetology %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_cosmetology.label}}</div>
+            <div>{{form.is_cosmetology}}</div>
+          </div>
+          {% endif %} {% if form.is_toothed_out %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_toothed_out.label}}</div>
+            <div>{{form.is_toothed_out}}</div>
+          </div>
+          {% endif %} {% if form.is_circumventional_cut %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">
+              {{form.is_circumventional_cut.label}}
+            </div>
+            <div>{{form.is_circumventional_cut}}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="two_row_section">
+        <div class="rest-container">
+          <div class="side">
+            {% if form.tread_depth_min %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.tread_depth_min.label}}</div>
+              <div>{{form.tread_depth_min}}</div>
+            </div>
+            {% endif %} {% if form.dot %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.dot.label}}</div>
+              <div>{{form.dot}}</div>
+            </div>
+            {% endif %} 
+            
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.is_label_printed.label}}</div>
+              <div>{{form.is_label_printed }}</div>
+            </div>
+            
+            
+            {% if form.supplier_price %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.supplier_price.label}}</div>
+              <div>{{form.supplier_price}}</div>
+            </div>
+            
+            {% endif %}
+          </div>
+
+          <div class="side">
+            {% if form.tread_depth_max %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.tread_depth_max.label}}</div>
+              <div>{{form.tread_depth_max}}</div>
+            </div>
+            {% endif %} 
+            {% if form.net_price %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.net_price.label}}</div>
+              <div>{{form.net_price}}</div>
+            </div>
+            {% endif %} 
+            
+            
+            
+            
+            {% if form.set_number %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.set_number.label}}</div>
+              <div>{{form.set_number}}</div>
+            </div>
+            {% endif %}
+
+            {% if form.weight %}
+            <div class="checkbox-item">
+              <div class="checkbox-label">{{form.weight.label}}</div>
+              <div>{{form.weight}}</div>
+            </div>
+            {% endif %}
+            
+          </div>
+          
+        </div>
+        <div class="olx-container">
+          <div class="checkbox-item">
+            <h1> ID: {{form.instance.id}} </h1>
+            
+          </div>
+
+          
+          {% if form.is_olx %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_olx.label}}</div>
+            <div>{{form.is_olx}}</div>
+          </div>
+          {% endif %} 
+          {% if form.is_allegro %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_allegro.label}}</div>
+            <div>{{form.is_allegro}}</div>
+          </div>
+          
+          {% endif %}
+
+          {% if form.is_otomoto %}
+          <div class="checkbox-item">
+            <div class="checkbox-label">{{form.is_otomoto.label}}</div>
+            <div>{{form.is_otomoto}}</div>
+          </div>
+          
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="form-container">
+      <div class="form-group">
+        <div class="text-box-label">{{form.advert_title.label}}</div>
+        <textarea id="advertDescription" class="title-box-input" name="advert_title" rows="4">{{form.advert_title.value}}</textarea>
+       
+      </div>
+      <p style="font-size: 32px; font-weight: bold;">Sekcja otomoto</p>
+      <!-- <img src="{% static 'tyreadderapp/otomoto_logo.svg' %}" alt="Product Image" style="max-width: 300px; height: auto;"> -->
+      <!-- <img src="http://127.0.0.1:8000/static/tyreadderapp/oto.png"> -->
+      <!-- <img src="{% static 'tyreadderapp/oto.png' %}"> -->
+      <!-- <button id="create_otomoto_ad" style="cursor: pointer;">Create otomoto ad</button> -->
+      <div class="form-group">
+        <div class="padding-2">ID reklamy w otomoto: {{object.otomoto_advert_id}}</div>
+        <div class="padding-2">Status reklamy: {{object.otomoto_advert_status}}</div>
+        <div class="padding-2">Status reklamy: {{object.is_otomoto}}</div>
+        <br>
+        <div class="text-box-label">{{form.otomoto_advert_description.label}}</div>
+        
+        <textarea id="otomoto_advert_description" class="text-box-input" name="otomoto_advert_description" rows="4">{{form.otomoto_advert_description.value}}</textarea>
+        
+       
+      </div>
+
+        <br><br>
+
+      <div class="form-group">
+        <div class="text-box-label">{{form.advert_description.label}}</div>
+        <textarea id="advertDescription" class="text-box-input" name="advert_description" rows="4">{{form.advert_description.value}}</textarea>
+        
+       
+      </div>
+
+      
+
+      
+    </div>
+    
+
+    <div class="change-btn-container"><button type="submit">Zmień</button></div>
+
+    <!-- <script>
+      document.getElementById("create_otomoto_ad").addEventListener("click", function(e) {
+          e.preventDefault();
+          alert("Creating otomoto ad...");
+      });
+    </script> -->
+    <!-- <script>
+      document.getElementById('createAdvertBtn').addEventListener('click', function() {
+          const productId = this.dataset.productId;
+      
+          fetch(`otomoto/create-otomoto-advert/${productId}/`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'  // Include if CSRF is enabled
+              },
+              body: JSON.stringify({})  // No extra data needed here
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert('Advert created successfully!');
+                  console.log(data.data);
+              } else {
+                  alert('Failed: ' + (data.error || 'Unknown error'));
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+      });
+      </script> -->
+  </form>
+</div>
+
+{% endblock %}
+

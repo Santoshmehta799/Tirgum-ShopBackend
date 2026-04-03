@@ -1,0 +1,139 @@
+{% extends "tyreadderapp/base/base.html" %}{% load static %}
+<!-- {% block css_files %} -->
+<!-- <link rel="stylesheet" href="{% static 'tyreadderapp/statistics.css' %}" /> -->
+{% endblock %} {% comment %} {% endcomment%} {% block content %}
+
+<style>
+  body {
+    background-color: blueviolet;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  thead,
+  th {
+    height: 70px;
+    background-color: darkslategray;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: sticky;
+    top: 0;
+    color: white;
+  }
+  th {
+    height: 50px;
+    padding-left: 5px;
+  }
+  tr {
+    text-align: center;
+    height: 50px;
+  }
+  table {
+    width: 100%;
+  }
+  tr:nth-child(even) {
+    background-color: darkgray;
+  }
+  tr:nth-child(odd) {
+    background-color: white;
+  }
+
+  .tile {
+    height: 100 px;
+    width: 170px;
+    background-color: yellow;
+    color: black;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+<div class="container">
+  <div class="tile">
+    <div><p>Wszystkich zarejestrowanych opon:</p></div>
+    <div class="number">{{available_products_count}}</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tile">
+    <div><p>Wartość opon netto:</p></div>
+    <div class="number">{{available_products_value}}</div>
+  </div>
+</div>
+
+<h3>Top 10 kombinacji marki i bieżnika:</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Marka</th>
+      <th>Bieżnik</th>
+      <th>Ilość</th>
+      <!-- This is the count column -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in top_brand_tread_combinations %}
+    <tr>
+      <td>{{ item.brand__name }}</td>
+      <td>{{ item.tread__name }}</td>
+      <td>{{ item.count }}</td>
+      <!-- This displays the count -->
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <b>
+        <th scope="col">Rozmiar</th>
+        <th scope="col">Liczba opon</th>
+      </b>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>315/60 R22.5</td>
+      <td>{{size_315_60_r22_5}}</td>
+    </tr>
+
+    <tr>
+      <td>315/70 R22.5</td>
+      <td>{{size_315_70_r22_5}}</td>
+    </tr>
+
+    <tr>
+      <td>385/65 R22.5</td>
+      <td>{{size_385_65_r22_5}}</td>
+    </tr>
+
+    <tr>
+      <td>385/55 R22.5</td>
+      <td>{{size_385_55_r22_5}}</td>
+    </tr>
+
+    <tr>
+      <td>355/50 R22.5</td>
+      <td>{{size_355_50_r22_5}}</td>
+    </tr>
+
+    <tr>
+      <td>295/80 R22.5</td>
+      <td>{{size_295_80_r22_5}}</td>
+    </tr>
+
+    <tr>
+      <td>435/50 R19.5</td>
+      <td>{{size_435_50_r19_5}}</td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}

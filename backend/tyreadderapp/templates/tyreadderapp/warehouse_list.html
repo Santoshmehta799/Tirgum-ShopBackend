@@ -1,0 +1,108 @@
+{% extends "tyreadderapp/base/base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: gray;
+    }
+
+    .warehouse-section {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+    }
+
+    .warehouse-bg-0 { background-color:white; }  /* light red/pink */
+    .warehouse-bg-1 { background-color: white; }  /* light cyan */
+    .warehouse-bg-2 { background-color: white; }  /* light green */
+    .warehouse-bg-3 { background-color: white; }  /* light yellow */
+    .warehouse-bg-4 { background-color: white; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        width: 40px;;
+        
+    }
+
+    th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    h2 {
+        background-color: greenyellow;
+        margin-top: 0;
+        color: #333;
+    }
+
+    h3 {
+        margin-top: 1rem;
+        color: #666;
+    }
+
+    .no-products,
+    .no-rows {
+        font-style: italic;
+        color:black;
+        margin-left: 1rem;
+    }
+</style>
+
+<h1>Magazyny</h1>
+
+{% for warehouse in warehouses %}
+    <div class="warehouse-section warehouse-bg-{{ forloop.counter0|add:"0"|divisibleby:3|yesno:'0,1,2' }}">
+        <h2>{{ warehouse.name }} – {{ warehouse.location }}</h2>
+
+        {% if warehouse.rows.all %}
+            {% for row in warehouse.rows.all %}
+                <h3>Rząd {{ row.code }}</h3>
+
+                {% if row.products.all %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Marka</th>
+                                <th>Bieżnik</th>
+                                <th>Rozmiar</th>
+                                <th>Para</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in row.products.all %}
+                                <tr>
+                                    <td>{{ product.id }}</td>
+                                    <td>{{ product.brand.name }}</td>
+                                    <td>{{ product.tread.name }}</td>
+                                    <td>{{ product.size }}</td>
+                                    <td>{{ product.pair }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-products">Brak produktów w tym rzędzie.</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p class="no-rows">W tym magazynie nie ma jeszcze rzędów.</p>
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% endblock %}

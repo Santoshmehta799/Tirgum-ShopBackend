@@ -1,0 +1,75 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} 
+
+{% block content %}
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2em;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
+    thead {
+        background-color: #f9f9f9;
+    }
+
+    h2 {
+        margin-top: 2em;
+    }
+</style>
+
+<h1>Product Combinations by EAN</h1>
+
+<h2>Products with EAN</h2>
+{% if with_ean %}
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Brand</th>
+        <th>Tread</th>
+        <th>Size</th>
+        <th>EAN</th>
+    </tr>
+    {% for product in with_ean %}
+    <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.brand }}</td>
+        <td>{{ product.tread }}</td>
+        <td>{{ product.size }}</td>
+        <td>{{ product.ean }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No products with EAN found.</p>
+{% endif %}
+
+<h2>Products without EAN</h2>
+{% if without_ean %}
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Brand</th>
+        <th>Tread</th>
+        <th>Size</th>
+    </tr>
+    {% for product in without_ean %}
+    <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.brand }}</td>
+        <td>{{ product.tread }}</td>
+        <td>{{ product.size }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>All products have an EAN.</p>
+{% endif %}
+
+{% endblock %}

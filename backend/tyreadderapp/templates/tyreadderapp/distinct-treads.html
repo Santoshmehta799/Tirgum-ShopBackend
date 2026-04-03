@@ -1,0 +1,15 @@
+{% comment %}
+{% extends "tyreadderapp/base/base.html" %} {% load static %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'tyreadderapp/search.css' %}" />
+{% endblock %} {% comment %} {% endcomment%} 
+
+
+{% block content %}
+
+<div>
+{% for i in distinct_treads %}
+{{i.brand}}
+{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends "tyreadderapp/base/base.html" %}
+
+
+
+{% block content %}
+
+<style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      color: #333;
+      margin: 1rem;
+    }
+  
+    h2 {
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+  
+    form {
+      width: 100%;
+      background: white;
+      padding: 1.5rem 2rem;
+      margin: 0 auto 2rem auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgb(0 0 0 / 0.1);
+    }
+  
+    form p {
+      margin-bottom: 1rem;
+    }
+  
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #34495e;
+    }
+  
+    input, select, textarea {
+      width: 100%;
+      height:80px;
+      /* padding: 0.5rem 0.75rem; */
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+  
+    input:focus, select:focus, textarea:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    
+  
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background-color: #3498db;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    button:hover {
+      background-color: #2980b9;
+    }
+  
+    h3 {
+      max-width: 480px;
+      margin: 1rem auto 0.5rem auto;
+      color: #27ae60;
+      font-weight: 600;
+      text-align: center;
+    }
+  
+    ul {
+      max-width: 480px;
+      margin: 0 auto 2rem auto;
+      background: #ecf0f1;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      list-style: none;
+    }
+  
+    li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #bdc3c7;
+      font-size: 1rem;
+      color: #2c3e50;
+    }
+  
+    li:last-child {
+      border-bottom: none;
+    }
+  
+    /* Responsive */
+    @media (max-width: 520px) {
+      form, ul, h3 {
+        max-width: 95%;
+        padding: 1rem;
+      }
+  
+      button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+
+  <h2>Przypisz opony do magazynu</h2>
+
+  
+
+  {% if updated_products %}
+      <h3>{{ updated_products.count }} product(s) updated successfully:</h3>
+            
+      <ul>
+        
+          {% for product in updated_products %}
+              <li>
+                  ID {{ product.id }} – {{ product.warehouse.name }}
+                  {% if product.row %}/ Row {{ product.row.code }}{% endif %}
+                  {% if product.rack %}/ Rack {{ product.rack.code }}{% endif %}
+                  {% if product.staple %}/ Staple {{ product.staple.code }}{% endif %}
+              </li>
+          {% endfor %}
+      </ul>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Location</button>
+  </form>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const warehouseSelect = document.getElementById('id_warehouse');
+        const rowSelect = document.getElementById('id_row');
+        const rackSelect = document.getElementById('id_rack');
+        const stapleSelect = document.getElementById('id_staple');
+
+        function clearOptions(selectElement) {
+            selectElement.innerHTML = '<option value="">---------</option>';
+        }
+
+        function populateOptions(selectElement, items) {
+            items.forEach(function (item) {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.code;
+                selectElement.appendChild(option);
+            });
+        }
+
+        warehouseSelect.addEventListener('change', function () {
+            const warehouseId = this.value;
+            if (!warehouseId) {
+                clearOptions(rowSelect);
+                clearOptions(rackSelect);
+                clearOptions(stapleSelect);
+                return;
+            }
+
+            fetch(`/tyreadderapp/ajax/load-location-data/?warehouse=${warehouseId}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearOptions(rowSelect);
+                clearOptions(rackSelect);
+                clearOptions(stapleSelect);
+
+                populateOptions(rowSelect, data.rows);
+                populateOptions(rackSelect, data.racks);
+                populateOptions(stapleSelect, data.staples);
+            })
+            .catch(error => console.error('Error fetching location data:', error));
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+{% endblock %}
+
+
+
+  
+

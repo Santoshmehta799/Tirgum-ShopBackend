@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pary</title>
+    <style>
+      td:empty::after {
+        content: "";
+        display: inline-block;
+        height: 80px;
+      }
+
+      thead,
+      th {
+        height: 50px;
+        background-color: darkslategray;
+        padding-left: 5px;
+        padding-right: 5px;
+        position: sticky;
+        top: 0;
+        color: white;
+      }
+      th {
+        height: 50px;
+        padding-left: 5px;
+      }
+      tr {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      tr:nth-child(even) {
+        background-color: lightblue;
+      }
+
+      .dot {
+        height: 20px;
+        width: 20px;
+        background-color: black;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+      .orangedot {
+        height: 20px;
+        width: 20px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgb(255, 150, 0),
+          rgb(255, 90, 0)
+        );
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4),
+          0 1px 3px rgba(0, 0, 0, 0.3) inset;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+
+      .red-dot {
+        height: 20px;
+        width: 20px;
+        background-color: red;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+
+      #activate-otomoto-pair {
+        padding: 5px 10px;
+        background-color: blueviolet;
+        color: white;
+        width: max-content;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        margin-bottom: 15px;
+      }
+
+      #activate-otomoto-pair:hover {
+        opacity: 0.85;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        font-size: 18px;
+      }
+
+      .link-to-detail-page a {
+        text-decoration: none;
+        color: blue;
+      }
+      .hover-preview {
+        max-width: 100px;
+        max-height: 80px;
+        object-fit: cover;
+        cursor: zoom-in;
+        transition: transform 0.2s ease;
+        position: relative;
+        z-index: 1;
+      }
+
+    .hover-preview:hover {
+        transform: scale(6);
+        z-index: 999;
+    }
+
+    #generate-main-img {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    margin: 5px;
+}
+
+#generate-main-img:hover {
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+  transform: translateY(-1px);
+}
+
+#generate-main-img:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+}
+
+#generate-main-img:focus {
+  outl
+
+
+
+    </style>
+  </head>
+  <body>
+    <h1>Pary</h1>
+
+    <form method="POST" >
+      {% csrf_token %}
+      <button type="button" id="generate-main-img">Generuj główne zdjęcie</button>
+      <!-- <button type="button" id="import-main-img">Zaimportuj główne zdjęcie</button> -->
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id Pary</th>
+            <th scope="col">
+              <input type="checkbox" id="select-all" class="form-check-input" />
+            </th>
+            <th scope="col">Pair Name</th>
+            <th scope="col">Pair Title</th>
+            <th scope="col">Main Image</th>
+            
+            <th scope="col">Ad Created at</th>
+            <th scope="col">Tyre 1</th>
+            <th scope="col">Tyre 2</th>
+            <th scope="col">Tyre 3</th>
+            <th scope="col">Tyre 4</th>
+            <th scope="col">Opony</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for pair in page_obj %}
+          <tr>
+            <th scope="row">{{pair.pk}}</th>
+            <td>
+              <input
+                type="checkbox"
+                class="product-checkbox"
+                name="selected_product"
+                value="{{ pair.pk }}"
+              />
+            </td>
+            <td>{{pair.name}}</td>
+            <td>{{pair.pair_title}}</td>
+            
+            <!-- <td>
+              {% if pair.main_img %}
+                <img src="{{ pair.main_img }}" alt="{{ pair.name }}" style="max-width:100px; max-height:80px; object-fit:cover;" />
+              {% else %}
+                —
+              {% endif %}
+            </td> -->
+            <td>
+              {% if pair.main_img %}
+                <img
+                  src="{{ pair.main_img }}"
+                  alt="{{ pair.name }}"
+                  class="hover-preview"
+                />
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <!-- <td>
+                {% if pair.main_img %}
+                  <img
+                    src="{{ pair.second_img }}"
+                    alt="{{ pair.name }}"
+                    class="hover-preview"
+                  />
+                {% else %}
+                  —
+                {% endif %}
+              </td> -->
+            
+            
+            
+            
+            <td>{{pair.created_at}}</td>
+
+            <!-- TYRE 1 -->
+            <td>
+              {% if pair.tyre_one %}
+                <img src="{{ pair.tyre_one }}" class="hover-preview" />
+                
+              {% endif %}
+            </td>
+
+            <!-- TYRE 2 -->
+            <td>
+              {% if pair.tyre_two %}
+                <img src="{{ pair.tyre_two }}" class="hover-preview" />
+                
+              {% endif %}
+            </td>
+
+            <!-- TYRE 3 -->
+            <td>
+              {% if pair.tyre_three %}
+                <img src="{{ pair.tyre_three }}" class="hover-preview" />
+                
+              {% endif %}
+            </td>
+
+            <!-- TYRE 4 -->
+            <td>
+              {% if pair.tyre_four %}
+                <img src="{{ pair.tyre_four }}" class="hover-preview" />
+                
+              {% endif %}
+            </td>
+            <!-- ✅ PRODUCTS IDS -->
+            <td>
+              {% if pair.product_ids %}
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  {% for pid in pair.product_ids %}
+                    <li>{{ pid }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+
+
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </div>
+
+    <!-- jQuery + AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      const csrftoken = getCookie("csrftoken");
+
+      // Select all functionality
+      $(document).ready(function () {
+        $("#select-all").on("change", function () {
+          const isChecked = $(this).is(":checked");
+          $(".product-checkbox").prop("checked", isChecked);
+        });
+      });
+
+      // Bulk activate Otomoto ads
+      $(document).on("click", "#generate-main-img", function () {
+        const selectedIds = [];
+        $(".product-checkbox:checked").each(function () {
+          selectedIds.push($(this).val());
+        });
+
+        console.log(selectedIds);
+
+        if (selectedIds.length === 0) {
+          alert("Please select at least one product.");
+          return;
+        }
+
+        $.ajax({
+          
+          url: "{% url 'tyreadderapp:generate_main_pair_image' %}",
+          
+          method: "POST",
+          // data: { product_ids: selectedIds.join(",") },
+          data: JSON.stringify({
+            pair_ids: selectedIds
+          }),
+          
+          contentType: "application/json",   // ✅ VERY IMPORTANT
+          processData: false, 
+          headers: { "X-CSRFToken": csrftoken },
+          // success: function (response) {
+          //   if(response.success) {
+          //     alert("Image generated succesfully!");
+          //     location.reload();
+          //   } else {
+          //     alert("You failed to generate img.");
+          //     console.error(response.failed);
+          //   }
+          // },
+          success: function (response) {
+            const failed = response.results.filter(r => !r.success);
+
+            if (failed.length === 0) {
+              alert("Image generated successfully!");
+              location.reload();
+            } else {
+              alert("Some images failed to generate.");
+              console.error(failed);
+            }
+        },
+
+          error: function () {
+            alert("Something went wrong!");
+          },
+        });
+      });
+
+      // // Bulk create Otomoto ads
+      // $(document).on("click", "#create-otomoto-pair-ad", function () {
+      //     const selectedIds = [];
+      //     $(".product-checkbox:checked").each(function () {
+      //         selectedIds.push($(this).val());
+      //     });
+
+      //     if (selectedIds.length === 0) {
+      //         alert("Please select at least one product.");
+      //         return;
+      //     }
+
+      //     $.ajax({
+      //         url: "/otomoto/create_otomoto_pair_ads_manually/",  // ✅ different URL
+      //         method: "POST",
+      //         data: JSON.stringify({ pair_ids: selectedIds }),
+      //         contentType: "application/json",  // VERY IMPORTANT
+      //         processData: false,
+      //         headers: { "X-CSRFToken": csrftoken },
+      //         success: function (response) {
+      //             if (response.success) {
+      //                 alert("Otomoto ads created successfully!");
+      //                 location.reload();
+      //             } else {
+      //                 alert("Some products failed to be created. Check console.");
+      //                 console.error(response.failed);
+      //             }
+      //         },
+      //         error: function () {
+      //             alert("Something went wrong!");
+      //         },
+      //     });
+      // });
+
+
+    </script>
+  </body>
+</html>

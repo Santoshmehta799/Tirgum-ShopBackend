@@ -1,0 +1,193 @@
+{% extends "tyreadderapp/base/base.html" %}
+{% load static %}
+{% block title %}Payment Dashboard{% endblock %}
+{% block content %}
+
+<style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 20px;
+    }
+    h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #2980b9;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+    }
+    h3 {
+      color: #34495e;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 16px;
+      margin: 6px 0;
+    }
+    strong {
+      color: #2c3e50;
+    }
+    .pallet {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .pallet p {
+      margin: 8px 0;
+    }
+    .pallet ul {
+      list-style-type: disc;
+      margin-left: 10px;
+      padding-left: 0;
+    }
+    .tyres{
+      font-size: 15px;
+      margin: 4px 0;
+    }
+    .order-update-btn{
+      color: white;
+      background-color: #2980b9;
+      padding: 10px;
+      border-radius: 10px;
+      width: 200px;
+    }
+    .order-print-btn{
+      color: white;
+      background-color: gray;
+      padding: 10px;
+      border-radius: 10px;
+      width: 200px;
+    }
+    .checkbox-input{
+      height: 70px;
+      width: 70px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 18px;
+      text-align: left;
+
+    }
+
+    .simple-line {
+      border: none;
+      height: 2px;
+      background-color: #333;
+      margin: 20px 0;
+}
+
+  </style>
+
+<form method="post">
+  {% csrf_token %}
+
+
+
+<div class="btn-section" style="display: flex; justify-content: space-between; ; align-items: center; margin-bottom: 20px;">
+<div class="display-box" style="display: flex; align-items: center; gap: 10px;">
+  <label for="completed">Mark as Completed:</label>
+<input type="checkbox" id="is_completed" name="is_completed" value="true" class="checkbox-input" {% if is_completed %}checked{% endif %}>
+</div>
+<div>
+<button type="submit" name="action" value="update_completion" class="order-update-btn">Update Order completion</button>
+
+<div  class="order-print-btn">
+  <a href="/tyreadderapp/order/{{ order_id }}/print">Print Order</a>
+</div>
+</div>
+</div>
+
+<!-- Skompletowany:{{is_completed}} -->
+Skompletowany: {% if is_completed %}
+TAK
+{% else %}
+NIE
+{% endif %}
+  
+  <h2>Szczegóły zamówienia - ID: {{ order_id }}</h2>
+  <p><strong>Zamawiający:</strong> {{ first_name }} {{ last_name }}</p>
+  <p><strong>e-mail:</strong> {{ email }}</p>
+  <p><strong>Telefon:</strong> {{ mobile }}</p>
+  <p><strong>Adres dostawy:</strong> {{ delivery_street }}, {{ delivery_apartment }}, {{ delivery_zip_code }} {{ delivery_city }}</p>
+  <p><strong>Data zamówienia:</strong> {{ date }}</p>
+  <p><strong>Tel. do osoby odb:</strong>{{delivery_phone}}<p>
+  <p><strong>Sposób dostawy:</strong>
+    {% if self_pickup %}
+      Odbiór osobisty
+    {% else %}
+      Dowóz do klienta
+    {% endif %}
+    </p>
+ 
+    <p><strong>Ilość opon w zamówieniu: {{ summary_of_order.tyres_qty }}</strong></p>
+
+    <hr class="simple-line">
+
+    <h3>Order Products and Locations</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Brand</th>
+          <th>Tread</th>
+          <th>Size</th>
+          <th>Warehouse</th>
+          <th>Row</th>
+          <th>Rack</th>
+          <th>Staple</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in order_products %}
+        <tr>
+          <td>{{ product.id }}</td>
+          <td>{{ product.brand }}</td>
+          <td>{{ product.tread }}</td>
+          <td>{{ product.size }}</td>
+          <td>{{ product.warehouse }}</td>
+          <td>{{ product.row }}</td>
+          <td>{{ product.rack }}</td>
+          <td>{{ product.staple }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+
+    
+  
+  <h3>Palety</h3>
+  {% for pallet in pallets %}
+      <div class="pallet">
+          <p style="text-decoration: underline;"><strong>Paleta nr:</strong> {{ pallet.pallet_number }}</p>
+          <p><strong>Typ palety:</strong> {{ pallet.pal_type }}</p>
+          <p><strong>Waga:</strong> {{ pallet.total_weight }}</p>
+          <p><strong>Position:</strong> {{ pallet.position }}</p>
+          
+          <p><strong>Kurier:</strong> {{ pallet.courier }}</p>          
+          <p><strong>Ilość opon na palecie:</strong> {{ pallet.items_quantity }}</p>
+          <p><strong>Opony:</strong></p>
+          <ul>
+          {% for tyre in pallet.tyres %}
+              <li class="tyres">{{ tyre }} </li>
+          {% endfor %}
+          </ul>
+      </div>
+      {% endfor %}
+
+
+
+    </form>
+    
+    <p>
+
+  {% endblock %}
+  

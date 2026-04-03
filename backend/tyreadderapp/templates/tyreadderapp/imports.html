@@ -1,0 +1,68 @@
+{% extends "tyreadderapp/base/base.html" %}
+
+{% block content %}
+
+<style>
+  .products {
+    background-color:rgb(181, 184, 175);
+    width: 350px;
+    display:flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border-radius: 5px;
+    padding: 10px;
+    color: rgb(10, 10, 10);
+  }
+  p {
+    text-align: left;
+    font-size: 20px;
+    padding-left: 10px;
+
+  }
+
+  button {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  h1{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+  }
+  .messages{
+    text-align: center;
+  }
+</style>
+
+<h1>Wybierz format pliku do pobrania</h1>
+<div class="products">
+  <form action="" method="POST" enctype="multipart/form-data">
+    <p>Produkty</p>
+    {% csrf_token %}{{form.as_p}}
+    <button type="submit">Upload</button>
+  </form>
+  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+</div>
+
+{% endblock %}
+
+
+

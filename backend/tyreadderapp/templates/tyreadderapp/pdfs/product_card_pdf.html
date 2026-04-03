@@ -1,0 +1,101 @@
+{% load static %}
+
+{% block css_files %}
+  <style>
+    {% include 'tyreadderapp/pdfs/product_pages_to_pdf.css' %}
+  </style>
+{% endblock %}
+
+
+
+
+ {% block content %}
+
+<div class="page_container">
+  <div class="navbar">
+    
+  {% for obj in product_card_pdf %}
+  <div class="navbar-top">
+    <div> <img src="http://tirgumpanel.pl/static/tyreadderapp/logo.png"> </div>
+    <div class="double">
+      <div>tel: 733-456-474</div>
+      <div>tel: 794-746-906</div>
+    </div>
+    <div>biuro.tirgum@gmail.com</div>
+    <div>www.tirgum.pl</div>
+    <div class="double">
+      <div>ul.Armii Krajowej 6</div>
+      <div>42-690 Boruszowice</div>
+    </div>
+  </div>
+  <div class="navbar-bottom">
+    <div>Mobilny Serwis Opon Ciężarowych</div>
+    <div>Sprzedaż opon ciężarowych nowych & używanych</div>
+    <div>Naprawy opon na gorąco</div>
+    <div>Warsztat wulkanizacyjny Tir</div>
+  </div>
+</div>
+  <div class="main-section">
+    <div class="section">1</div>
+    <div class="section">
+      <div class="right-section">
+        <h1>{{obj.brand}}</h1>
+        <h2>{{obj.tread}}</h2>
+        <h3>{{obj.size}}</h3>
+
+        <p class="paragraph">Podstawowe parametry produktu:</p>
+
+        <h3>
+          {% if obj.is_tire_bead_damaged == True %} Przyszczypnięta stopka<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_incised == True %} Nacinana<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_front_repair == True %} Naprawa gwoździowa<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_side_repair_one == True %} Naprawa boczna<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_side_repair_two == True %} Naprawa boczna _2<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_visible_cracks == True %} Pęknięcia<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_braked == True %} Hamulec<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_cosmetology == True %} Kosmetyka<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.is_toothed_out == True %} Wyząbkowana<br />
+          {% endif %}
+        </h3>
+        <h3>
+          {% if obj.retreaded == True %} Bieżnikowana<br />
+          {% endif %}
+        </h3>
+      </div>
+
+      <!-- models.IntegerField() tread_depth_max = models.IntegerField() dot =
+      models.IntegerField(null=True) net_price =
+      models.DecimalField(max_digits=5, decimal_places=2, default=0) -->
+    </div>
+   
+    
+  </div>
+  {% endfor %}
+ 
+</div>
+
+{% endblock %}

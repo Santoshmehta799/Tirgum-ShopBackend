@@ -1,0 +1,79 @@
+
+{% extends "tyreadderapp/base/base.html" %} {% load static %} 
+
+{% block content %}
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2em;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
+    thead {
+        background-color: #f9f9f9;
+    }
+
+    h2 {
+        margin-top: 2em;
+    }
+</style>
+
+<h2>🟢 Unique Products WITH Tread Depth</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Tread</th>
+            <th>Size</th>
+            <th>Depth (mm)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in with_depth %}
+        <tr>
+            <td>{{ item.brand }}</td>
+            <td>{{ item.tread }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.depth }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No products found with tread depth.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br><br>
+
+<h2>🔴 Unique Products WITHOUT Tread Depth</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Tread</th>
+            <th>Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in without_depth %}
+        <tr>
+            <td>{{ item.brand }}</td>
+            <td>{{ item.tread }}</td>
+            <td>{{ item.size }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">All products have tread depth set.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

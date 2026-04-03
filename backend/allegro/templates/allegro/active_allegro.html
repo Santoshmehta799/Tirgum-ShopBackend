@@ -1,0 +1,77 @@
+{# templates/allegro/active_allegro.html #}
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Active Allegro Products</h1>
+
+<table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Local Status</th>
+            <th>Allegro Active?</th>
+            <th>Price</th>
+            <th>Images</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product in page_obj %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.get_status_display }}</td>
+            <td>
+                {% if product.allegro_is_active %}
+                    <span style="color: green; font-weight: bold;">Yes</span>
+                {% else %}
+                    <span style="color: red; font-weight: bold;">No</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if product.price %}
+                    {{ product.price }} {{ product.currency|default:"PLN" }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                {% for image in product.images.all %}
+                    <img src="{{ image.image.url }}" alt="{{ product.name }}" style="height: 50px; margin-right: 5px;">
+                {% empty %}
+                    No images
+                {% endfor %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="6" style="text-align:center;">No products found.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{# Pagination controls #}
+<div style="margin-top: 15px;">
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <strong>{{ num }}</strong>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

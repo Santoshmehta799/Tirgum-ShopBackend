@@ -1,0 +1,23 @@
+body {
+  justify-content: center;
+  padding: 2rem;
+  height: 100vh;
+}
+
+/* .popo {
+  background-color: #ff0000;
+  font-weight: 400;
+  height: 40px;
+  border-radius: 12px;
+  color: black;
+  text-align: center;
+  display: flex;
+} */
+
+/* .lala {
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+} */
+
+/* background: linear-gradient(35deg, red, purple); */

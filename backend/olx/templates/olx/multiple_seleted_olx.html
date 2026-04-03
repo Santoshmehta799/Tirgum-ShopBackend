@@ -1,0 +1,241 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} 
+ {% block content %}
+
+<style>
+ thead ,th{
+  height: 50px;
+  background-color: darkslategray;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: sticky; top: 0;
+  color: white;
+}
+th {
+  height:50px;
+  padding-left: 5px;
+}
+  tr {
+    text-align: center;
+  }
+  table {
+    width:100%;
+  }
+  tr:nth-child(even) { 
+            background-color: lightblue; 
+        } 
+  
+  .dot {
+  height:20px;
+  width: 20px;
+  background-color: black;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;  
+  
+}
+.orangedot {
+  height: 20px;
+  width: 20px;
+  background: radial-gradient(circle at 30% 30%, rgb(255, 150, 0), rgb(255, 90, 0));
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4), 
+              0 1px 3px rgba(0, 0, 0, 0.3) inset;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;  
+}
+
+.red-dot {
+  height:20px;
+  width: 20px;
+  background-color: red;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;  
+  
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 5px 10px;
+  transition: transform 0.3s;
+}
+
+.refresh-btn:hover {
+  transform: rotate(360deg);
+}
+
+</style>
+
+<h1>Opony do dodania: {{quantity}}</h1>
+
+<form id="product_form" action="{% url 'olx:bulk-product-olx' %}" method="post">
+  {% csrf_token %}
+  <button class="btn btn-success btn-lg w-100 my-3" type="submit" onclick="setAction('bulk_save_olx')" style="background-color: rgb(0, 225, 255); font-size: 1.25rem; width: 10%; margin: 10px 0; padding: 15px; border: 2px solid #007bff; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out;">Bulk Save Olx</button>
+  <button class="btn btn-primary btn-lg w-100 my-3" type="submit" onclick="setAction('Update_Olx')" style="background-color: rgb(0, 225, 255); font-size: 1.25rem; width: 10%; margin: 10px 0; padding: 15px; border: 2px solid #0056b3; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out;">Update Olx</button>
+  <button class="btn btn-success btn-lg w-100 my-3" type="submit" onclick="setAction('Olx_Remove')" style="background-color: rgb(255, 0, 0); font-size: 1.25rem; width: 10%; margin: 10px 0; padding: 15px; border: 2px solid #007bff; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out;">Olx Remove</button>
+  <button class="btn btn-primary btn-lg w-100 my-3" type="submit" onclick="setAction('allegro')" style="background-color: rgb(255, 170, 0); font-size: 1.25rem; width: 10%; margin: 10px 0; padding: 15px; border: 2px solid #e68900; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out;">Allegro</button>
+  <a class="btn btn-info btn-lg w-100 my-3" href="{% url 'tyreadderapp:olx_advert_sync' %}" 
+      style="background-color: red; color: white; position: absolute;right: 26px; height: 18px; font-size: 1.25rem; width: 10%; margin: 10px 0; padding: 15px; ">
+      OLX Advert Sync
+  </a>
+ 
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all"></th>
+        <th scope="col">Id</th>
+        <th scope="col">Refresh</th>
+        <th scope="col">EAN</th>
+        <th scope="col">Marka</th>
+        <th scope="col">Bieżnik</th>
+        <th scope="col">Rozmiar</th>
+        <th scope="col">Uszk.stopka</th>
+        <th scope="col">Nacin.</th>
+        <th scope="col">Nap. gwoźdz.</th>
+        <th scope="col">Nap. boczne</th>
+        <th scope="col">Pękn.</th>
+        <th scope="col">Ham.</th>
+        <th scope="col">Kosm.</th>
+        <th scope="col">Bież. MIN</th>
+        <th scope="col">Bież. MAX</th>
+        <th scope="col">Dot</th>
+        <th scope="col">Netto</th>
+        <th scope="col">Link</th>
+        <th scope="col">Dodana w dniu</th>
+        <th scope="col">Para</th>
+        <th scope="col">Ad Id</th>
+        <th scope="col">IS OLX</th>
+        <th scope="col">OLX Status</th> 
+        <th scope="col">IS Allegro</th>
+        <th scope="col">Allegro Status</th> 
+        <th scope="col">Product Listing</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in filters.qs %}
+      <tr>
+        <td><input type="checkbox" class="select-product" value="{{product.id}}" name="bulk-product-olx"></td>
+        <th scope="row">{{product.pk}}</th>
+        <td>
+          <button class="refresh-btn" onclick="refreshProduct({{ product.pk }})">⟳</button>
+        </td>
+        <td>{% if product.ean%} {{product.ean}} {% else%} &nbsp; {% endif %}</td>
+        <td>{{product.brand}}</td>
+        <td>{{product.tread}}</td>
+        <td>{{product.size}}</td>
+        <td>{% if product.is_tire_bead_damaged %} Tak{% endif %}</td>
+        <td>{% if product.is_incised %} Tak{% endif %}</td>
+        <td>{{product.front_repairs}}</td>
+        <td>{% if product.is_side_repair %} Tak{% endif %}</td>
+        <td>{% if product.is_visible_cracks %} Tak{% endif %}</td>
+        <td>{% if product.is_braked %} Tak{% endif %}</td>
+        <td>{% if product.is_cosmetology %} Tak{% endif %}</td>
+        <td>{{product.tread_depth_min}}</td>
+        <td>{{product.tread_depth_max}}</td>
+        <td>{{product.dot}}</td>
+        <td>{{product.net_price}}</td>
+        <td>
+          <div class="link-to-detail-page">
+            <a href="/tyreadderapp/shop/{{product.pk}}">Szczegóły</a>
+          </div>
+        </td>
+        <td>{{product.created}}</td>
+        <td>{% if product.pair %}{{product.pair}} {% endif %}</td>
+        <td>{{product.olx_advert_id}}</td>
+        <td>{% if product.is_olx %}<div class="dot"></div> {% endif %}</td>
+        <td>{% if product.is_olx_active %}<div class="dot"></div> {% endif %}</td>
+        <td>{% if product.is_allegro %}<div class="orangedot"></div> {% endif %}</td>
+        <td>{% if product.is_allegro_active %}<div class="orangedot"></div> {% endif %}</td>
+        <td>{{ product.get_product_listing_status_display }}</td>
+        {% comment %} <td>{% if product.olx_advert_status == "outdated" %}<div class="red-dot">{% else %}{% endif %}</td> {% endcomment %}
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% comment %} <button class="btn btn-warning btn-lg w-100 my-3" type="submit" > Print Label</button> {% endcomment %}
+  <input type="hidden" name="action_type" id="action_type" value="bulk_save_olx">
+  
+  <!-- Buttons -->
+  
+</form>
+<script>
+  function setAction(actionType) {
+    document.getElementById('action_type').value = actionType;
+  }
+</script>
+<script>
+  document.getElementById('select-all').addEventListener('change', function() {
+    var checkboxes = document.querySelectorAll('.select-product');
+    for (var checkbox of checkboxes) {
+      checkbox.checked = this.checked;
+    }
+  });
+  
+  var productCheckboxes = document.querySelectorAll('.select-product');
+  for (var checkbox of productCheckboxes) {
+    checkbox.addEventListener('change', function() {
+      var allChecked = document.querySelectorAll('.select-product:checked').length === productCheckboxes.length;
+      document.getElementById('select-all').checked = allChecked;
+    });
+  }
+  </script>
+  
+  {% comment %}
+  <div>
+    <form>
+      <div class="search-bar">
+        {{filters.form}}
+        <input type="submit" value="Search" />
+      </div>
+    </form>
+
+    <div class="clear-search">
+      <a href="http://127.0.0.1:8000/tyreadderapp/shop">
+        <button type="button">Wyczyść</button>
+      </a>
+    </div>
+    <div>
+      <a href="{% url 'main' %}"> Homepage </a>
+    </div>
+  </div>
+  {% endcomment %}
+
+
+  <script>
+    function refreshProduct(productId) {
+      const url = "{% url 'olx:refresh_olx_product' 0 %}".replace('0', productId);
+  
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        console.log("OLX Refresh Response:", data);
+        if (data.status === 'success') {
+          location.reload();
+        } else {
+          alert('Error: ' + (data.message || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Network error:', error);
+        alert('Network error while refreshing product');
+      });
+    }
+  </script>
+{% endblock %}

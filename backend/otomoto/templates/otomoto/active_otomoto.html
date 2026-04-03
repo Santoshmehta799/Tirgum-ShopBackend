@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>To jest tytuł strony</title>
+    <style>
+      thead,
+      th {
+        height: 50px;
+        background-color: darkslategray;
+        padding-left: 5px;
+        padding-right: 5px;
+        position: sticky;
+        top: 0;
+        color: white;
+      }
+      th {
+        height: 50px;
+        padding-left: 5px;
+      }
+      tr {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+      }
+      tr:nth-child(even) {
+        background-color: lightblue;
+      }
+
+      .dot {
+        height: 20px;
+        width: 20px;
+        background-color: black;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+      .orangedot {
+        height: 20px;
+        width: 20px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgb(255, 150, 0),
+          /* rgb(255, 90, 0) */
+        );
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4),
+          0 1px 3px rgba(0, 0, 0, 0.3) inset;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+
+      .greendot {
+        height: 20px;
+        width: 20px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgb(0, 255, 0) /* rgb(0, 255, 0) */
+        );
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4),
+          0 1px 3px rgba(0, 0, 0, 0.3) inset;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+
+      #activate-otomoto {
+        padding: 5px 10px;
+        background-color: blueviolet;
+        color: white;
+        width: max-content;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        margin-bottom: 15px;
+      }
+
+      .red-dot {
+        height: 20px;
+        width: 20px;
+        background-color: red;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+      .hover-preview {
+        max-width: 100px;
+        max-height: 80px;
+        object-fit: cover;
+        cursor: zoom-in;
+        transition: transform 0.2s ease;
+        position: relative;
+        z-index: 1;
+      }
+
+    .hover-preview:hover {
+        transform: scale(6);
+        z-index: 999;
+    }
+
+      
+    </style>
+  </head>
+  <body>
+    
+    <h1>Otomoto aktywne</h1>
+    <form method="POST">
+      {% csrf_token %}
+      
+      <button
+        type="button"
+        id="deactivate-otomoto"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: red;
+          color: white;
+          border-radius: 8px;
+        "
+      >
+        Deaktywuj reklamę
+      </button>
+      <br />
+      <button
+        type="button"
+        id="autorefresh-otomoto"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: green;
+          color: white;
+          border-radius: 8px;
+        "
+      >
+        Autorefresh
+      </button>
+      <br />
+      <button
+        type="button"
+        id="export-to-olx"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: green;
+          color: white;
+          border-radius: 8px;
+        "
+      >
+        Exportuj do olx
+      </button>
+
+      <!-- <button id="sync-btn">Sync Adverts</button> -->
+      <button type="button" id="sync-btn">Sync Adverts</button>
+      <button type="button" id="sync-ad-stats">Sync Ad Stats</button>
+
+      <br />
+      <table class="table">
+        <thead>
+          <tr>
+            <!-- <th><input type="checkbox" id="select-all"></th> -->
+            <th scope="col">Id opony</th>
+            <th scope="col">Image</th>
+            <th>
+              <input type="checkbox" id="select-all" class="form-check-input" />
+            </th>
+            
+            <!-- <th scope="col">Activated</th> -->
+            <th scope="col">otomoto_id</th>
+            
+            <!-- <th scope="col">Refresh</th>
+            <th scope="col">EAN</th> -->
+            <th scope="col">Marka</th>
+            <th scope="col">Bieżnik</th>
+            <th scope="col">Rozmiar</th>
+            <!-- <th scope="col">Uszk.stopka</th>
+            <th scope="col">Nacin.</th>
+            <th scope="col">Nap. gwoźdz.</th>
+            <th scope="col">Nap. boczne</th>
+            <th scope="col">Pękn.</th>
+            <th scope="col">Ham.</th>
+            <th scope="col">Kosm.</th> -->
+            <th scope="col">Bież. MIN</th>
+            <th scope="col">Bież. MAX</th>
+            <th scope="col">Dot</th>
+            <th scope="col">Netto</th>
+            <th scope="col">Link</th>
+            <th scope="col">Para</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Valid To</th>
+            <th scope="col">Ad Views</th>
+            <th scope="col">Ad Visits</th>
+            <th scope="col">Phone Views</th>
+            <th scope="col">Phone Calls</th>
+            <th scope="col">Messages</th>
+            <th scope="col">Status</th>
+            <th scope="col">Autorefresh</th>
+            <th scope="col">Olx Export</th>
+            <th scope="col">Link to Get</th>
+            <th scope="col">Update</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in page_obj %}
+          <tr>
+            <!-- <td><input type="checkbox" class="select-product" value="{{product.id}}" name="bulk-product-olx"></td> -->
+            <th scope="row">{{product.pk}}</th>
+            <td>
+              {% if product.preferred_image %}
+                <img src="{{ product.preferred_image.image.url }}" width="80" height="80" class="hover-preview"/>
+              {% else %}
+                No Image
+              {% endif %}
+            </td>
+            <td>
+              <input
+                type="checkbox"
+                class="product-checkbox"
+                value="{{product.id}}"
+                name="bulk-product-otomoto"
+              />
+            </td>
+            
+            <!-- <td>{{product.is_otomoto_advert_activated}}</td> -->
+            <!-- <td>{{ product.otomoto_advert_id|default:"" }}</td> -->
+            <td>
+              {% if product.otomoto_data and product.otomoto_data.otomoto_advert_id %} 
+              {{ product.otomoto_data.otomoto_advert_id }} {% else %}
+              <!-- empty string -->
+              {% endif %}
+            </td>
+            <!-- <td>
+              <button class="refresh-btn" onclick="refreshProduct({{ product.pk }})">⟳</button>
+            </td>
+            <td>{% if product.ean%} {{product.ean}} {% else%} &nbsp; {% endif %}</td> -->
+            <td>{{product.brand.name}}</td>
+            <td>{{product.tread}}</td>
+            <td>{{product.size}}</td>
+            <!-- <td>{% if product.is_tire_bead_damaged %} Tak{% endif %}</td> -->
+            <!-- <td>{% if product.is_incised %} Tak{% endif %}</td>
+            <td>{{product.front_repairs}}</td>
+            <td>{% if product.is_side_repair %} Tak{% endif %}</td>
+            <td>{% if product.is_visible_cracks %} Tak{% endif %}</td>
+            <td>{% if product.is_braked %} Tak{% endif %}</td>
+            <td>{% if product.is_cosmetology %} Tak{% endif %}</td> -->
+            <td>{{product.tread_depth_min}}</td>
+            <td>{{product.tread_depth_max}}</td>
+            <td>{{product.dot}}</td>
+            <td>{{product.net_price}}</td>
+            <td>
+              <div class="link-to-detail-page">
+                <a href="/tyreadderapp/shop/{{product.pk}}">Link</a>
+              </div>
+            </td>
+            <td>{{product.pair}}</td>
+            <!-- <td>{{product.created}}</td>
+            <td>{% if product.pair %}{{product.pair}} {% endif %}</td>
+            <td>{{product.olx_advert_id}}</td>
+            <td>{% if product.is_olx %}<div class="dot"></div> {% endif %}</td>
+            <td>{% if product.is_olx_active %}<div class="dot"></div> {% endif %}</td>
+            <td>{% if product.is_allegro %}<div class="orangedot"></div> {% endif %}</td>
+            <td>{% if product.is_allegro_active %}<div class="orangedot"></div> {% endif %}</td>
+            <td>{{ product.get_product_listing_status_display }}</td> -->
+            <!-- {% comment %} <td>{% if product.olx_advert_status == "outdated" %}<div class="red-dot">{% else %}{% endif %}</td> {% endcomment %} -->
+            <td>
+              {% if product.otomoto_data and product.otomoto_data.created_at %}
+              {{ product.otomoto_data.created_at|date:"Y-m-d H:i" }} {% else %}
+              N/A {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data and product.otomoto_data.valid_to %} 
+              {{ product.otomoto_data.valid_to|date:"Y-m-d H:i" }} {% else %} N/A
+              {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.ad_views_total }} {% else %} 0 {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.ad_visits_total }} {% else %} 0 {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.phone_views_total }} {% else %} 0 {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.phone_calls_total }} {% else %} 0 {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.messages_total }} {% else %} 0 {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data %} 
+              {{product.otomoto_data.otomoto_advert_status }} {% else %} 
+              {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data.is_autorefresh %}
+              <div class="greendot"></div>
+              {% else %}
+              <div class="orangedot"></div>
+              {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data.is_exported_to_olx %}
+              <div class="greendot"></div>
+              {% else %}
+              <div class="orangedot"></div>
+              {% endif %}
+            </td>
+            <td>
+              {% if product.otomoto_data.otomoto_advert_id %}
+      
+             <a href="{% url 'otomoto:active_single_ad_detail' product.otomoto_data.otomoto_advert_id %}">Ad View</a>
+        {% endif %}
+          </td>
+          <td>
+            {% if product.otomoto_data.otomoto_advert_id %}
+            <a href="{% url 'otomoto:update_single_ad_detail' product.otomoto_data.otomoto_advert_id %}">Update</a>
+           Update
+      {% endif %}
+        </td>
+          
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+    <br /><br />
+    <div
+      class="pagination"
+      style="
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        font-size: 32px;
+      "
+    >
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      <span
+        >Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span
+      >
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+
+    </div>
+    <br /><br />
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+        function getCSRFToken() {
+          return document.querySelector("[name=csrfmiddlewaretoken]").value;
+        }
+      </script>
+      <script>
+        // BULK DEACTIVATE OTOMOTO ADS
+        $(document).on("click", "#deactivate-otomoto", function () {
+          const selectedIds = [];
+          $(".product-checkbox:checked").each(function () {
+            selectedIds.push($(this).val());
+          });
+
+          if (selectedIds.length === 0) {
+            alert("Please select at least one product.");
+            return;
+          }
+
+          $.ajax({
+            url: "/otomoto/deactivate_otomoto_ads/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              product_ids: selectedIds,
+            }),
+            headers: {
+              "X-CSRFToken": getCSRFToken(),
+            },
+            success: function (response) {
+              if (response.success) {
+                alert("Otomoto ads marked as deactivated!");
+                location.reload();
+              } else {
+                alert(response.error || "Failed to update Otomoto flag.");
+              }
+            },
+            error: function (xhr) {
+              console.error(xhr.responseText);
+              alert("Error occurred while updating Otomoto flag.");
+            },
+          });
+        });
+
+        // AUTOREFRESH - toggle selected products
+        $(document).on("click", "#autorefresh-otomoto", function () {
+          const selectedIds = [];
+          $(".product-checkbox:checked").each(function () {
+            selectedIds.push($(this).val());
+          });
+
+          if (selectedIds.length === 0) {
+            alert("Please select at least one product.");
+            return;
+          }
+
+          $.ajax({
+            url: "/otomoto/toggle_autorefresh/", // make sure this URL points to your toggle_autorefresh view
+            method: "POST",
+            data: {
+              product_ids: selectedIds.join(","),
+              csrfmiddlewaretoken: getCSRFToken(),
+            },
+            success: function (response) {
+              if (response.success) {
+                alert("Autorefresh toggled!");
+                location.reload(); // refresh the table to show updated dots
+              } else {
+                alert(response.error || "Failed to toggle autorefresh.");
+              }
+            },
+            error: function () {
+              alert("Server error.");
+            },
+          });
+        });
+
+        $(document).on("click", "#export-to-olx", function () {
+          const selectedIds = [];
+          $(".product-checkbox:checked").each(function () {
+            selectedIds.push($(this).val());
+          });
+
+          if (selectedIds.length === 0) {
+            alert("Please select at least one product.");
+            return;
+          }
+
+          $.ajax({
+            url: "/otomoto/olx-export/", // make sure this URL points to your toggle_autorefresh view
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              product_ids: selectedIds,
+            }),
+            headers: {
+              "X-CSRFToken": getCSRFToken(),
+            },
+            success: function (response) {
+              if (response.success) {
+                // alert("Olx Export toggled!");
+                location.reload(); // refresh the table to show updated dots
+              } else {
+                alert(response.error || "Failed to export to olx.");
+              }
+            },
+            error: function () {
+              alert("Server error.");
+            },
+          });
+        });
+
+        $(document).ready(function () {
+          $("#select-all").on("change", function () {
+            const isChecked = $(this).is(":checked");
+            $(".product-checkbox").prop("checked", isChecked);
+          });
+        });
+      
+        $(document).on("click", "#sync-ad-stats", function () {
+          const selectedIds = [];
+          $(".product-checkbox:checked").each(function () {
+            selectedIds.push($(this).val());
+          });
+
+          if (selectedIds.length === 0) {
+            alert("Please select at least one product.");
+            return;
+          }
+
+          $.ajax({
+            url: "/otomoto/ad-stats/", // make sure this URL points to your toggle_autorefresh view
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              product_ids: selectedIds,
+            }),
+            headers: {
+              "X-CSRFToken": getCSRFToken(),
+            },
+            success: function (response) {
+              if (response.success) {
+                // alert("Olx Export toggled!");
+                location.reload(); // refresh the table to show updated dots
+              } else {
+                alert(response.error || "Failed to syc ads");
+              }
+            },
+            error: function () {
+              alert("Server error.");
+            },
+          });
+        });
+        
+      </script>
+      
+    
+
+    <script>
+      document.getElementById('sync-btn').addEventListener('click', function(event) {
+        event.preventDefault(); 
+          fetch("{% url 'otomoto:sync_ads' %}")
+              .then(response => response.json())
+              .then(data => {                  
+                  // alert('Synced ' + data.count + ' adverts!');
+                  console.log("Full response:", data); 
+              })
+              .catch(err => console.error(err));
+      });
+      </script>
+  </body>
+</html>
+
+

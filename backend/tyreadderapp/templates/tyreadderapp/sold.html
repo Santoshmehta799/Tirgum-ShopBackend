@@ -1,0 +1,143 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} 
+{% block css_files %}
+<!-- <link rel="stylesheet" href="{% static 'tyreadderapp/workspace.css' %}" /> -->
+{% endblock %} {% comment %} {% endcomment%} {% block content %}
+
+<style>
+  thead {
+    height: 50px;
+    background-color: gray;
+    padding-left: 5px;
+  }
+  th {
+    height:50px;
+    padding-left: 5px;
+  }
+  tr {
+    text-align: center;
+  }
+  table {
+    width:100%;
+  }
+  tr:nth-child(even) { 
+            background-color: Lightgreen; 
+        } 
+</style>
+
+<h1>Opony do dodania: {{quantity}}</h1>
+
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <b>
+            <th scope="col">Id</th>
+            <th scope="col">Marka</th>
+            <th scope="col">Bieżnik</th>
+            <th scope="col">Rozmiar.</th>
+
+            <!-- <th scope="col">Noś.</th>
+        <th scope="col">Prędk.</th> -->
+            <th scope="col">Uszk.stopka</th>
+            <th scope="col">Nacin.</th>
+            <th scope="col">Nap. gwoźdz.</th>
+            <th scope="col">Nap. boczne</th>
+
+            <th scope="col">Pękn.</th>
+            <th scope="col">Ham.</th>
+            <th scope="col">Kosm.</th>
+
+            <th scope="col">Bież. MIN</th>
+            <th scope="col">Bież. MAX</th>
+            <th scope="col">Dot</th>
+            <th scope="col">Netto</th>
+            <!-- <th scope="col">Cena Zak.</th> -->
+            <!-- <th scope="col">MAG</th> -->
+            <th scope="col">Link</th>
+            <th scope="col">Dodana w dniu</th>
+            <th scope="col">Image</th>
+          </b>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% for product in filters.qs %}
+          <th scope="row">{{product.pk}}</th>
+          <td>{{product.brand}}</td>
+          <td>{{product.tread}}</td>
+          <td>{{product.size}}</td>
+
+          <!-- <td>{{product.load_index}}</td>
+        <td>{{product.speed_index}}</td> -->
+
+          <td>
+            {% if product.is_tire_bead_damaged == True %} Tak<br />
+            {% endif %}
+          </td>
+          <td>
+            {% if product.is_incised == True %} Tak<br />
+            {% endif %}
+          </td>
+          <td>{{product.front_repairs}}</td>
+          <td>
+            {% if product.is_side_repair == True %} Tak<br />
+            {% endif %}
+          </td>
+          <td>
+            {% if product.is_visible_cracks == True %} Tak<br />
+            {% endif %}
+          </td>
+          <td>
+            {% if product.is_braked == True %} Tak<br />
+            {% endif %}
+          </td>
+          <td>
+            {% if product.is_cosmetology == True %} Tak<br />
+            {% endif %}
+          </td>
+
+          <td>{{product.tread_depth_min}}</td>
+          <td>{{product.tread_depth_max}}</td>
+          <td>{{product.dot}}</td>
+          <td>{{product.net_price}}</td>
+          <!-- <td>{{product.supplier_price}}</td> -->
+          
+          <td>
+            <div class="link-to-detail-page">
+              <a href="shop/{{product.pk}}">Szczegóły</a>
+            </div>
+          </td>
+
+          <td>{{product.created}}</td>
+          <td>
+            <div class="link-to-detail-page">
+              <a href="add-product-images/{{product.pk}}">New Image</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  
+  {% comment %}
+  <div>
+    <form>
+      <div class="search-bar">
+        {{filters.form}}
+        <input type="submit" value="Search" />
+      </div>
+    </form>
+
+    <div class="clear-search">
+      <a href="http://127.0.0.1:8000/tyreadderapp/shop">
+        <button type="button">Wyczyść</button>
+      </a>
+    </div>
+    <div>
+      <a href="{% url 'main' %}"> Homepage </a>
+    </div>
+  </div>
+  {% endcomment %}
+
+
+{% endblock %}

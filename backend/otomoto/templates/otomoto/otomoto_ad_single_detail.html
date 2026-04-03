@@ -1,0 +1,55 @@
+
+<h1>Reklama otomoto</h1>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ ad.title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .images img { max-width: 300px; margin: 10px; border: 1px solid #ccc; }
+        .ad-details { margin-top: 20px; }
+        .ad-details dt { font-weight: bold; }
+        .ad-details dd { margin: 0 0 10px 0; }
+    </style>
+</head>
+<body>
+
+<h1>{{ ad.title }}</h1>
+<p>Status: {{ ad.status|capfirst }}</p>
+<p>Advertiser Type: {{ ad.advertiser_type }}</p>
+<p>Created at: {{ ad.created_at }}</p>
+<p>Valid until: {{ ad.valid_to }}</p>
+<p>Location: {{ ad.city.pl }}, {{ ad.municipality }}</p>
+
+<h2>Description</h2>
+<p>{{ ad.description|linebreaks }}</p>
+
+<h2>Price</h2>
+<p>
+    {% if ad.params.price.1 %}
+        {{ ad.params.price.1 }} {{ ad.params.price.currency }} ({{ ad.params.price.gross_net }})
+    {% else %}
+        Not specified
+    {% endif %}
+</p>
+
+<h2>Other Parameters</h2>
+
+
+<h2>Contact</h2>
+<p>Person: {{ ad.contact.person }}</p>
+
+<h2>Images</h2>
+<div class="images">
+    {% for photo in ad.photos.values %}
+        <img src="{{ photo.732x488 }}" alt="{{ ad.title }}">
+    {% endfor %}
+</div>
+
+<p><a href="{{ ad.url }}" target="_blank">View original listing</a></p>
+
+</body>
+</html>
+

@@ -1,0 +1,36 @@
+
+{% comment %} 
+{% extends "tyreadderapp/base/base.html" %} {% load static %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'tyreadderapp/main.css' %}" />
+{% endblock %}
+
+
+ {% load static %}
+ {% endcomment %}
+<style>
+  body {
+    font-family: sans-serif;
+    background-color: yellow;
+  }
+  table {
+    border-collapse: collapse;
+  }
+  thead{
+    background: #e6e6e6;
+  }
+  td, th {
+    border: 1px solid #999;
+    padding: 0.5rem;
+    text-align: left;
+  }
+</style>
+
+<h1>Lala</h1>
+<div>
+  {% for i in first_image %}
+
+  <img width="400px" height="400px" src="{{i.image.url}} " alt="" />
+
+  {% endfor %}
+</div>
+

@@ -1,0 +1,202 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zamówienie #{{ order_id }}</title>
+
+    <style>
+        /* ===== Global Styles ===== */
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 30px;
+            font-size: 14px;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+
+        h2 {
+            border-bottom: 2px solid #2980b9;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        p {
+            margin: 4px 0;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        /* ===== Table Styles ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        /* ===== Pallet Box ===== */
+        .pallet {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+        }
+
+        .pallet p {
+            margin: 5px 0;
+        }
+
+        .tyres-list {
+            margin: 5px 0 0 15px;
+        }
+
+        /* ===== Divider ===== */
+        hr {
+            border: none;
+            height: 2px;
+            background-color: #333;
+            margin: 20px 0;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Zamówienie nr {{ order_id }}</h1>
+
+    <!-- <div class="section">
+        <h2>Dane Klienta</h2>
+        <p><strong>Imię i nazwisko:</strong> {{ first_name }} {{ last_name }}</p>
+        <p><strong>E-mail:</strong> {{ email }}</p>
+        <p><strong>Telefon:</strong> {{ mobile }}</p>
+    </div> -->
+
+    <!-- <div class="section">
+        <h2>Dane Dostawy</h2>
+        <p><strong>Adres:</strong> {{ delivery_street }} {{ delivery_apartment }}, {{ delivery_zip_code }} {{ delivery_city }}</p>
+        <p><strong>Telefon do odbiorcy:</strong> {{ delivery_phone }}</p>
+        <p><strong>Sposób dostawy:</strong> 
+            {% if self_pickup %}
+                Odbiór osobisty
+            {% else %}
+                Dowóz do klienta
+            {% endif %}
+        </p>
+    </div> -->
+
+    <!-- <div class="section">
+        <h2>Szczegóły Zamówienia</h2>
+        <p><strong>Data zamówienia:</strong> {{ date|date:"Y-m-d H:i" }}</p>
+        <p><strong>Status:</strong> 
+            {% if is_completed %}✅ Zrealizowane
+            {% else %}❌ W trakcie realizacji
+            {% endif %}
+        </p>
+        <p><strong>Ilość opon w zamówieniu:</strong> {{ summary_of_order.tyres_qty }}</p>
+    </div> -->
+
+    <hr>
+
+    <div class="section">
+        <h2>Produkty w zamówieniu</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marka</th>
+                    <th>Bieżnik</th>
+                    <th>Rozmiar</th>
+                    <th>Magazyn</th>
+                    <th>Rząd</th>
+                    <th>Regał</th>
+                    <th>Staple</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in order_products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>{{ product.tread }}</td>
+                    <td>{{ product.size }}</td>
+                    <td>{{ product.warehouse }}</td>
+                    <td>{{ product.row }}</td>
+                    <td>{{ product.rack }}</td>
+                    <td>{{ product.staple }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align:center;">Brak produktów w zamówieniu</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Palety</h2>
+        {% for pallet in pallets %}
+            <div class="pallet">
+                <p><strong>Paleta nr:</strong> {{ pallet.pallet_number }}</p>
+                <p><strong>Typ:</strong> {{ pallet.pal_type }}</p>
+                <p><strong>Pozycja:</strong> {{ pallet.position }}</p>
+                <p><strong>Kurier:</strong> {{ pallet.courier }}</p>
+                <p><strong>Ilość opon:</strong> {{ pallet.items_quantity }}</p>
+                {% if pallet.tyres %}
+                <p><strong>Opony:</strong></p>
+                <ul class="tyres-list">
+                    {% for tyre in pallet.tyres %}
+                        <li>{{ tyre }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Brak informacji o paletach.</p>
+        {% endfor %}
+    </div>
+
+    <div class="footer">
+        <p>Wygenerowano automatycznie przez system Tirgum — {{ now|date:"Y-m-d H:i" }}</p>
+    </div>
+</body>
+</html>

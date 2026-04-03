@@ -1,0 +1,374 @@
+{% extends "tyreadderapp/base/base.html" %} 
+{% load static %}
+{% block content %}
+
+<style>
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .product-image-cell {
+    width: 200px;
+    height: auto;
+    position: relative;
+    padding: 10px;
+  }
+
+  .image-container {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .thumbnail-image {
+      width: 100px;  
+      height: 100px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      display: block;
+  }
+
+  .enlarged-image-container {
+      width: 400px;
+      height: 400px;
+      display: none;
+      position: absolute;
+      z-index: 100;
+      top: -100px;
+      left: 50px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+      padding: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+  }
+
+  .enlarged-image {
+      width: 100%;
+      max-width: 390px;
+      max-height: 390px;
+      object-fit: contain;
+  }
+
+  .image-container:hover .enlarged-image-container {
+      display: block;
+  }
+
+  .no-image {
+      color: #999;
+      font-style: italic;
+      font-size: 0.9em;
+  }
+
+  .table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .table thead th {
+    background-color: #555;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #fc8803;
+  }
+
+  .table tbody td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .separator-row td {
+    height: 1px;
+    background-color: #fc8803;
+    padding: 0;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .pair-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  .pair-select:focus {
+    border-color: #fc8803;
+    outline: none;
+  }
+
+  .submit-button {
+    background-color: #fc8803;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 15px 0;
+  }
+
+  .table-responsive {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  
+  .submit-button:hover {
+    background-color: #e67a02;
+  }
+  
+  .submit-button:active {
+    background-color: #d67202;
+  }
+
+  .pair-select option.empty-pair {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .button-wrapper {
+    margin: 20px 0;
+    padding: 0 10px;
+  }
+
+  .alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #e41111;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+</style>
+
+<h1>Szukaj par</h1>
+{% if single_product_pairs %}
+<div class="alert-warning">
+    <h2>Uwaga! Masz pary z tylko 1 oponą</h2>
+    <p>Usuń parę z następujących opon:</p>
+    {% for pair in single_product_pairs %}
+        <div>
+            <strong>Para nr {{ pair.name }}:</strong>
+            <ul>
+                {% for product in pair.product_set.all %}
+                    <li>
+                        id: {{ product.id }} {{ product.brand }} - {{ product.tread }} - {{ product.size }}
+                        {% if product.main_image %}
+                            <img src="{{ product.main_image.image.url }}" alt="Product Image" style="width: 100px;" />
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li>No products in this pair.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+
+<form method="POST" action="{% url 'tyreadderapp:pair_search' %}">
+  {% csrf_token %}
+  <div class="button-wrapper">
+    <button type="submit" class="submit-button">Save Pairs</button>
+  </div>
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Id</th>
+          <th>Marka</th>
+          <th>Bieżnik</th>
+          <th>Rozmiar</th>
+          <th>Bież. MIN</th>
+          <th>Bież. MAX</th>
+          <th>Para</th>
+          <th>Pair select</th>
+          <th>Dot</th>
+          <th>Magazyn</th>
+          <th>Bieżnikow.</th>
+          <th>Uszk.stopka</th>
+          <th>Nacin.</th>
+          <th>Nap. gwoźdz.</th>
+          <th>Nap. boczne</th>
+          <th>Pękn.</th>
+          <th>Ham.</th>
+          <th>Kosm.</th>
+          <th>Kolej</th>
+          <th>Is_olx</th> 
+          <th>Olx_status</th>  
+
+          <th>Netto</th>
+          <th>Edit</th>
+          <th>Check</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in filters.qs %}
+          <tr class="product-row" data-brand="{{product.brand}}" data-tread="{{product.tread}}" data-size="{{product.size}}">
+            <td class="product-image-cell">
+              {% if product.main_image %}
+                <div class="image-container">
+                  <img src="{{ product.main_image.image.url }}" alt="Tire Image" class="thumbnail-image">
+                  <div class="enlarged-image-container">
+                    <img src="{{ product.main_image.image.url }}" alt="Tire Image" class="enlarged-image">
+                  </div>
+                </div>
+              {% else %}
+                <span class="no-image">No image</span>
+              {% endif %}
+            </td>
+            <td>{{product.pk}}</td>
+            <td>{{product.brand}}</td>
+            <td>{{product.tread}}</td>
+            <td>{{product.size}}</td>
+            <td>{{product.tread_depth_min}} mm</td>
+            <td>{{product.tread_depth_max}} mm</td>         
+            <td>{{product.pair}}</td>
+            {% comment %} <td>
+              <select name="pair_{{ product.pk }}" class="pair-select">
+                <option value="">Select Pair</option>
+                {% for pair in pairs %}
+                  <option value="{{ pair.pk }}" 
+                          {% if product.pair == pair.pk %}selected{% endif %}
+                          class="{% if pair.product_count == 0 %}empty-pair{% endif %}">
+                    {{ pair.name }} 
+                    {% if pair.product_count == 0 %}
+                      (EMPTY)
+                    {% else %}
+                      ({{ pair.product_count }} tires)
+                    {% endif %}
+                  </option>
+                {% endfor %}
+              </select>
+            </td> {% endcomment %}
+
+            <td>
+              <select name="pair_{{ product.pk }}" class="pair-select">
+                <option value="">Select Pair</option>
+                {% for pair in pairs %}
+                  <option value="{{ pair.pk }}"
+                          {% if product.pair == pair.pk %}selected{% endif %}
+                          class="{% if pair.product_count == 0 %}empty-pair{% endif %}">
+                    {{ pair.name }} ({{ pair.product_count }} tire{{ pair.product_count|pluralize }})
+                  </option>
+                {% endfor %}
+              </select>
+            </td>
+            <td>{{product.dot}} r.</td>
+            
+            <td>{% if product.is_retreaded %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_tire_bead_damaged %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_incised %}<div class="dot"></div>{% endif %}</td>
+            <td>{{product.front_repairs}}</td>
+            <td>{% if product.is_side_repair %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_visible_cracks %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_braked %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_cosmetology %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_ruts %}<div class="dot"></div>{% endif %}</td>
+            <td>{% if product.is_olx %}<div class="dot"></div>{% endif %}</td>
+            <td>{{product.get_olx_status_display}}</td>
+            <td>{{product.net_price}}</td>
+            <td><a href="shop/{{product.pk}}/edit">Edit</a></td>
+            <td><a href="shop/{{product.pk}}">Check</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% comment %} <div>
+    <button type="submit">Save Pairs</button>
+  </div> {% endcomment %}
+</form>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let rows = document.querySelectorAll('.product-row');
+    let previousBrand = '';
+    let previousTread = '';
+    let previousSize = '';
+
+    rows.forEach((row, index) => {
+      let currentBrand = row.dataset.brand;
+      let currentTread = row.dataset.tread;
+      let currentSize = row.dataset.size;
+
+      if (index > 0 && (currentBrand !== previousBrand || currentTread !== previousTread || currentSize !== previousSize)) {
+        let separatorRow = document.createElement('tr');
+        separatorRow.className = 'separator-row';
+        separatorRow.innerHTML = '<td colspan="57"></td>';
+        row.parentNode.insertBefore(separatorRow, row);
+      }
+
+      previousBrand = currentBrand;
+      previousTread = currentTread;
+      previousSize = currentSize;
+    });
+  });
+
+  function updatePair(select) {
+    const productId = select.dataset.productId;
+    const selectedPairId = select.value;
+    
+    // Send AJAX request to update the pair
+    fetch('/update-pair/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: JSON.stringify({
+        product_id: productId,
+        pair_id: selectedPairId
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Optionally refresh the page or update the UI
+        location.reload();
+      } else {
+        alert('Failed to update pair');
+      }
+    });
+  }
+
+  // Helper function to get CSRF token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+{% endblock %}

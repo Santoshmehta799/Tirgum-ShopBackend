@@ -1,0 +1,274 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} 
+
+
+{% comment %}
+{% block css_files %}{% endblock %} 
+<link rel="stylesheet" href="{% static 'tyreadderapp/product-detail.css' %}" />
+{% endcomment %} 
+
+{% block content %}
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Icons Section */
+  .icons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 10px;
+  }
+  
+  .icons img {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .icons img:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Product Title */
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Main Section */
+  .main-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .left-section {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .left-section img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  /* Right Section - Table */
+  .right-section {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #333;
+    color: white;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Additional Images */
+  img[height="450"] {
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .main-section {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .right-section {
+      width: 100%;
+    }
+  
+    .left-section img {
+      max-width: 100%;
+    }
+  
+    .icons {
+      justify-content: center;
+    }
+  
+    .table {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div class="icons">
+  <a href="{% url 'tyreadderapp:product_card_pdf' pk %}"
+    ><img
+      height="60"
+      width="50"
+      src="{%static 'tyreadderapp/PDF.png'  %}"
+  /></a>
+
+  <a href="{%url 'tyreadderapp:single_label'  pk %}"
+    ><img
+      height="60"
+      width="50"
+      src="{%static 'tyreadderapp/label.png'  %}"
+  /></a>
+
+  <a href="{% url 'tyreadderapp:edit-detail' pk %}"
+    ><img
+      height="60"
+      width="50"
+      src="{%static 'tyreadderapp/edit.jpg'  %}"
+  /></a>
+</div>
+<br />
+<div class="container">
+  <h1>ID:{{product.id}}</h1>
+  
+  <h1>{{product.brand}} {{product.tread}} {{product.size}}</h1>
+  <div class="main-section">
+    <div class="section left-section">
+      <img src="{{images.0.image.url}}" width="800" height="750" />
+    </div>
+    <div class="section right-section">
+      <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Marka</td>
+            <td>{{product.brand}}</td>
+          </tr>
+          <tr>
+            <td>Bieżnik</td>
+            <td>{{product.tread}}</td>
+          </tr>
+          <tr>
+            <td>Rozmiar</td>
+            <td>{{product.size}}</td>
+          </tr>
+
+          {% if product.is_tire_bead_damaged == True %}
+          <tr>
+            <td>Uszkodzona stopka</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %} {% if product.is_incised == True %}
+          <tr>
+            <td>Opona nacinana</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %} {% if product.front_repairs != 0 %}
+          <tr>
+            <td>Naprawy gwoździowe:</td>
+            <td>{{product.front_repairs}}</td>
+          </tr>
+          {% endif %} {% if product.is_side_repair == True %}
+          <tr>
+            <td>Naprawa boczna</td>
+            <td>TAK</td>
+          </tr>
+
+          {% endif %} {% if product.is_visible_cracks == True %}
+          <tr>
+            <td>Widoczne pęknięcia</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %} {% if product.is_braked == True %}
+          <tr>
+            <td>Hamulec</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %} {% if product.is_cosmetology == True %}
+          <tr>
+            <td>Kosmetyka</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %} {% if product.is_toothed_out == True %}
+          <tr>
+            <td>Wyząbkowana</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %} {% if product.retreaded == True %}
+          <tr>
+            <td>Bieżnikowana</td>
+            <td>TAK</td>
+          </tr>
+          {% endif %}
+
+          <tr>
+            <td>Bieżnik MIN</td>
+            <td>{{product.tread_depth_min}} mm</td>
+            <br />
+          </tr>
+          <tr>
+            <td>Bieżnik MAX</td>
+            <td>{{product.tread_depth_max}} mm</td>
+            <br />
+          </tr>
+          <tr>
+            <td>Data produkcji:</td>
+            <td>{{product.dot}}</td>
+            <br />
+          </tr>
+          <tr>
+            <td>Cena netto:</td>
+            <td>{{product.net_price}}</td>
+            <br />
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% for image in images|slice:"1:" %}
+
+  <img height="450" width="550" src="{{image.image.url}}" />
+  {% endfor %}
+
+  
+  {% endblock %}
+  
+</div>

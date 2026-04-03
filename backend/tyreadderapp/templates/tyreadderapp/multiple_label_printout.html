@@ -1,0 +1,98 @@
+{% extends "tyreadderapp/base/base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  thead {
+    height: 50px;
+    background-color: gray;
+    padding-left: 5px;
+  }
+  th {
+    height:50px;
+    padding-left: 5px;
+  }
+  tr {
+    text-align: center;
+  }
+  table {
+    width:100%;
+  }
+  tr:nth-child(even) { 
+    background-color: Lightgreen; 
+  } 
+</style>
+
+<form id="product_form" action="{% url 'tyreadderapp:process_selected_products' %}" method="post">
+  {% csrf_token %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all"></th>
+        <th scope="col">Id</th>
+        <th scope="col">Image</th>
+        <th scope="col">Marka</th>
+        <th scope="col">Bieżnik</th>
+        <th scope="col">Rozmiar</th>
+        <th scope="col">Link</th>
+        <th scope="col">Dodana w dniu</th>
+        <!-- <th scope="col">Image</th> -->
+        <th scope="col">Is labeled</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in filters.qs %}
+      <tr>
+        <td><input type="checkbox" class="select-product" value="{{product.id}}" name="selected_product"></td>
+        <th scope="row">{{product.pk}}</th>
+        <td>
+            {% if product.main_image %}
+                <img src="{{ product.main_image.image.url }}" alt="Main Image" width="80" height="80" style="object-fit: cover; border-radius: 5px;">
+            {% else %}
+                No Image
+            {% endif %}
+        </td>
+        <td>{{product.brand}}</td>
+        <td>{{product.tread}}</td>
+        <td>{{product.size}}</td>
+        
+        <td>
+          <div class="link-to-detail-page">
+            <a href="/tyreadderapp/shop/{{ product.pk }}">Szczegóły</a>
+          </div>
+        </td>
+        <td>{{ product.created|date:"H:i" }}</td>
+        <!-- <td>
+          <div class="link-to-detail-page">
+            <a href="add-product-images/{{product.pk}}">New Image</a>
+          </div>
+        </td> -->
+        <td>{{product.is_label_printed}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% comment %} <button class="btn btn-warning btn-lg w-100 my-3" type="submit" > Print Label</button> {% endcomment %}
+
+  <button class="btn btn-success btn-lg w-100 my-3" type="submit" name="action" value="bulk_label_printing">Bulk Label Printing</button>
+  <button class="btn btn-danger btn-lg w-100 my-3" type="submit" name="action" value="delete_label">Delete Selected Labels</button>
+</form>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function() {
+  var checkboxes = document.querySelectorAll('.select-product');
+  for (var checkbox of checkboxes) {
+    checkbox.checked = this.checked;
+  }
+});
+
+var productCheckboxes = document.querySelectorAll('.select-product');
+for (var checkbox of productCheckboxes) {
+  checkbox.addEventListener('change', function() {
+    var allChecked = document.querySelectorAll('.select-product:checked').length === productCheckboxes.length;
+    document.getElementById('select-all').checked = allChecked;
+  });
+}
+</script>
+
+{% endblock %}

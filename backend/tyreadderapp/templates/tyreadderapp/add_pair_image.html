@@ -1,0 +1,155 @@
+{% extends "tyreadderapp/base/base.html" %} 
+{% load static %} 
+{% block content %}
+
+    <title>Add Pair Image</title>
+
+    <style>
+        /* Previous styles remain exactly the same */
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: #f0f4f8;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Enhanced heading style */
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-bottom: 10px;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            border-radius: 2px;
+        }
+
+        /* Rest of the previous styles remain exactly the same */
+        form {
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 95%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        form p {
+            margin: 25px 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 18px;
+            margin: 12px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 18px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+            transform: translateY(-1px);
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 15px 0;
+            width: 100%;
+            font-size: 16px;
+            padding: 10px 0;
+        }
+
+        @media screen and (max-width: 480px) {
+            form {
+                width: 95%;
+                padding: 30px;
+                margin: 15px auto;
+            }
+
+            select {
+                font-size: 16px;
+                height: 55px;
+            }
+
+            button[type="submit"] {
+                padding: 16px;
+                font-size: 18px;
+            }
+
+            /* Mobile adjustment for heading */
+            h2 {
+                font-size: 28px;
+                margin-bottom: 25px;
+            }
+        }
+
+        form label {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Upload Image for Pair</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload Image</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

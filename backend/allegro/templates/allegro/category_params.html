@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Allegro Category Parameters</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Allegro Category Parameters</h1>
+
+    <div id="error" style="color:red;"></div>
+    <table id="parametersTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Required</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody id="parametersBody">
+            <!-- Parameters will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        const categoryId = "257701"; // Change category if needed
+        const url = `/allegro/params/${categoryId}/`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Allegro category parameters:", data);
+
+                if (data.error) {
+                    document.getElementById("error").textContent = data.error;
+                    return;
+                }
+
+                const table = document.getElementById("parametersTable");
+                const tbody = document.getElementById("parametersBody");
+
+                if (data.parameters && data.parameters.length > 0) {
+                    table.style.display = "table";
+
+                    data.parameters.forEach(param => {
+                        const tr = document.createElement("tr");
+
+                        const tdId = document.createElement("td");
+                        tdId.textContent = param.id;
+                        tr.appendChild(tdId);
+
+                        const tdName = document.createElement("td");
+                        tdName.textContent = param.name;
+                        tr.appendChild(tdName);
+
+                        const tdRequired = document.createElement("td");
+                        tdRequired.textContent = param.required ? "Yes" : "No";
+                        tr.appendChild(tdRequired);
+
+                        const tdType = document.createElement("td");
+                        tdType.textContent = param.type || "";
+                        tr.appendChild(tdType);
+
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    document.getElementById("error").textContent = "No parameters found for this category.";
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching Allegro category parameters:", err);
+                document.getElementById("error").textContent = "Failed to fetch category parameters.";
+            });
+    </script>
+</body>
+</html>

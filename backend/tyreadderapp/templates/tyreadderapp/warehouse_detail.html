@@ -1,0 +1,53 @@
+{% extends "tyreadderapp/base/base.html" %}
+
+{% block content %}
+<h1>Warehouse: {{ warehouse.name }} – {{ warehouse.location }}</h1>
+
+<h2>Add Products to Warehouse</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+            <tr>
+                {% for field in form.visible_fields %}
+                    <td>
+                        {{ field.errors }}
+                        {{ field.label_tag }}<br>
+                        {{ field }}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Add Products</button>
+</form>
+
+<h2>Existing Products in Warehouse</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Size</th>
+            <th>Status</th>
+            <th>Tread Depth (MIN – MAX) mm</th>
+            <th>Row</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in existing_products %}
+            <tr>
+                <td>{{ product.brand.name }}</td>
+                <td>{{ product.size }}</td>
+                <td>{{ product.status }}</td>
+                <td>{{ product.tread_depth_min }} – {{ product.tread_depth_max }}</td>
+                <td>{{ product.row.code if product.row else "N/A" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No products in this warehouse.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

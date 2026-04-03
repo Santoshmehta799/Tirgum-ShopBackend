@@ -1,0 +1,299 @@
+{% extends "tyreadderapp/base/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #444;
+    }
+
+    /* File Upload & Buttons Section */
+    .upload-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-section label {
+        font-weight: bold;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .upload-section input[type="file"] {
+        width: auto;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    /* Table Styles */
+    .table-responsive {
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        
+        border-collapse: collapse;
+    }
+
+    thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    th {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    /* Image Display Styles */
+    .product-image-cell {
+        width: 200px;
+        height: auto;
+        position: relative;
+        padding: 10px;
+    }
+    
+    .image-container {
+        position: relative;
+        width: 100%;
+        display: inline-block;
+    }
+    
+    .thumbnail-image {
+        width: 100px;  
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block;
+    }
+    
+    .enlarged-image-container {
+        width: 400px;
+        height: 400px;
+        display: none;
+        position: absolute;
+        z-index: 100;
+        top: -100px;
+        left: 50px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        padding: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        overflow: hidden;
+    }
+    
+    .enlarged-image {
+        width: 100%;
+        max-width: 390px;
+        max-height: 390px;
+        object-fit: contain;
+    }
+    
+    .image-container:hover .enlarged-image-container {
+        display: block;
+    }
+    
+    .no-image {
+        color: #999;
+        font-style: italic;
+        font-size: 0.9em;
+    }
+
+    /* Dot Indicators */
+    .dot, .greendot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .dot {
+        background-color: black;
+    }
+
+    .greendot {
+        background-color: green;
+    }
+
+    /* Select All Checkbox */
+    .form-check-input {
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <h1>Zaktualizuj zdjęcia opon</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- File Upload & Buttons -->
+        <div class="upload-section">
+            <div>
+                <label for="images" class="form-label">Upload Images:</label>
+                <input type="file" name="images" id="images" multiple>
+            </div>
+            <div class="btn-group">
+                <button type="submit" name="action" value="upload" class="btn btn-primary">Upload Images</button>
+                <button type="submit" name="action" value="download" class="btn btn-success">Download Images</button>
+            </div>
+        </div>
+
+        <!-- Product Table -->
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="select-all" class="form-check-input">
+                        </th>
+                        <th>ID</th>
+                        <th style="width: 200px;">Image</th>
+                        <th>Brand</th>
+                        <th>Tread</th>
+                        <th>Size</th>
+                        <th>Min Tread Depth</th>
+                        <th>Max Tread Depth</th>
+                        <th>DOT</th>
+                        <th>Net Price</th>
+                       
+                        <!-- <th>Pair</th> -->
+                        <th>Update Status</th>
+                        <!-- <th>Is_OLX</th>
+                        <th>OLX Status</th>
+                        <th>Supplier Price</th> -->
+                        <th>Data i godzina dodania</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="form-check-input product-checkbox" id="product-{{ product.id }}" name="products" value="{{ product.id }}">
+                        </td>
+                        <td>{{ product.id }}</td>
+                        <td class="product-image-cell">
+                            {% if product.main_image %}
+                                <div class="image-container">
+                                    <img src="{{ product.main_image.image.url }}" alt="Product Image" class="thumbnail-image">
+                                    <div class="enlarged-image-container">
+                                        <img src="{{ product.main_image.image.url }}" alt="Product Image" class="enlarged-image">
+                                    </div>
+                                </div>
+                            {% else %}
+                                <span class="no-image">No image</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ product.brand }}</td>
+                        <td>{{ product.tread }}</td>
+                        <td>{{ product.size }}</td>
+                        <td>{{ product.tread_depth_min }}</td>
+                        <td>{{ product.tread_depth_max }}</td>
+                        <td>{{ product.dot }}</td>
+                        <td>{{ product.net_price }}</td>
+                        
+                        <td>{{ product.pair }}</td>
+                        <td>{% if product.image_update_status %}<div class="greendot"></div>{% endif %}</td>
+                        <!-- <td>{% if product.is_olx %}<div class="greendot"></div>{% endif %}</td>
+                        <td>{% if product.is_olx_active %}<div class="greendot"></div>{% endif %}</td> -->
+                        <!-- <td>{{product.supplier_price}}</td> -->
+                        <td>
+                            {{ product.created|date:"Y-m-d" }}<br>
+                            <small>{{ product.created|date:"H:i" }}</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Select All functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAllCheckbox = document.getElementById('select-all');
+        const productCheckboxes = document.querySelectorAll('.product-checkbox');
+        
+        selectAllCheckbox.addEventListener('change', function() {
+            productCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+    });
+</script>
+{% endblock %}

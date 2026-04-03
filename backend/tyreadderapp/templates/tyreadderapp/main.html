@@ -1,0 +1,471 @@
+<style>
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --olx-color: #ff5722;
+    --filter-color: #9b59b6;
+    --dark-accent: #2c3e50;
+    --light-text: #ffffff;
+    --dark-text: #333333;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .olx-links {
+  display: none; /* hide links initially */
+  margin-top: 10px;
+  transition: max-height 0.3s ease;
+}
+
+.toggle-arrow {
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 10px;
+  user-select: none;
+}
+
+.toggle-arrow.open {
+  transform: rotate(180deg); /* rotate arrow when open */
+}
+
+
+  h1 {
+    text-align: center;
+    color: var(--dark-accent);
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+
+  .containerl {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-title {
+    grid-column: 1 / -1;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--dark-accent);
+    border-bottom: 2px solid var(--dark-accent);
+    padding-bottom: 5px;
+  }
+
+  .menu-tile {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center;
+    height: 100px;
+    font-size: 1.5rem;
+    border: none;
+    background-color: white;
+    box-shadow: var(--shadow);
+    border-radius: 10px;
+    color: var(--dark-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 15px;
+    font-weight: 500;
+  }
+
+  /* Category styling */
+  .core-functions {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border-left: 5px solid #2980b9;
+  }
+  .pair-management-functions {
+    background-color: #FFD700; 
+    color: var(--light-text);
+    border-left: 5px solid #FFD700;
+    color:black;
+  }
+  .report-functions {
+    background-color: darkslategray;
+    color: var(--light-text);
+    border-left: 5px solid darkslategray;;
+    color:black;
+  }
+
+  .section-links {
+  display: flex;
+  flex-direction: column; /* stack links vertically */
+  gap: 10px;              /* space between links */
+}
+
+  .warehouse-functions {
+    background-color: rgb(14, 17, 216);
+    color: var(--light-text);
+    border-left: 5px solid darkslategray;;
+    color:white;
+  }
+
+  .management-functions {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+    border-left: 5px solid #27ae60;
+  }
+
+  .olx-functions {
+    background-color: var(--olx-color);
+    color: var(--light-text);
+    border-left: 5px solid #d35400;
+  }
+
+  .otomoto-functions {
+    background-color: var(--filter-color);
+    color: var(--light-text);
+    border-left: 5px solid #333333;
+  }
+
+  .filter-functions {
+    background-color: var(--filter-color);
+    color: var(--light-text);
+    border-left: 5px solid #8e44ad;
+  }
+
+  .menu-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .olx-sync-btn {
+    background-color: var(--olx-color);
+    color: white;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    height: 50px;
+    width: auto;
+    padding: 0 20px;
+    font-size: 1rem;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    z-index: 100;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .olx-sync-btn:hover {
+    background-color: #e64a19;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 1200px) {
+    .containerl {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .containerl {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .menu-tile {
+      height: 80px;
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+{% block content %}
+<h1>Co chcesz robić? Hello Santosh bhai 003</h1>
+
+<div class="containerl">
+  <!-- Core Functions Section -->
+  <h2 class="section-title">Podstawowe funkcje</h2>
+  
+  <!-- <a class="menu-tile core-functions" href="{% url 'tyreadderapp:shop' %}">
+    Shop
+  </a> -->
+  <a class="menu-tile management-functions" href="{% url 'tyreadderapp:update-items-status' %}">
+    Sprzedawaj
+  </a>
+
+
+  <a class="menu-tile management-functions" href="{% url 'tyreadderapp:add-tread' %}">
+    Dodaj Bieżnik
+  </a>
+  
+  
+  <a class="menu-tile management-functions" href="{% url 'tyreadderapp:form' %}">
+    Dodaj oponę
+  </a>
+
+  
+
+  <a class="menu-tile management-functions" href="{% url 'tyreadderapp:tyre_product_view' %}">
+    Aktualizuj oponę
+  </a>
+
+  <a class="menu-tile management-functions" href="modify-pair-image">
+    Modify pair image
+  </a>
+
+  <!-- Management Functions Section -->
+  <h2 class="section-title">Zarządzanie</h2>
+
+  <a class="menu-tile core-functions" href="{% url 'tyreadderapp:workspace' %}">
+    Workspace
+  </a>
+  
+ 
+
+  
+
+  <a class="menu-tile core-functions" href="image-update">
+    Update Images
+  </a>
+
+  <h2 class="section-title">Zarządzanie parami</h2>
+  <a class="menu-tile pair-management-functions" href="pair_search">
+    Szukaj par
+  </a>
+  <a class="menu-tile pair-management-functions" href="prospects_for_pairs">
+    Ulepszone Szukaj par
+  </a>
+
+  <!-- OLX Section -->
+  <!-- <h2 class="section-title">OLX</h2>
+  
+  <a class="menu-tile olx-functions" href="/olx/select/bulk-product-olx">
+    Dodaj zbiorczo do OLX
+  </a>
+
+  <a class="menu-tile olx-functions" href="pairadverts">
+    Add Pair OLX
+  </a>
+
+  <a class="menu-tile olx-functions" href="add-image">
+    Add Pair Image OLX
+  </a> -->
+
+
+ 
+
+
+  <!-- ------------------------ -->
+    <!-- Otomoto Section -->
+  <!-- <h2 class="section-title">OTOMOTO</h2>
+  
+  <a class="menu-tile filter-functions" href="/otomoto/otomoto-inactive/">
+    Nieaktywne otomoto
+  </a>
+
+  <a class="menu-tile filter-functions" href="/otomoto/otomoto-active/">
+    Aktywne otomoto
+  </a> -->
+
+ 
+  <!-- ------------------------ -->
+
+
+
+  <!-- Filters & Tools Section -->
+  <h2 class="section-title">Filtry i narzędzia</h2>
+  
+ 
+
+  <a class="menu-tile filter-functions" href="filter-to-add">
+    TO_ADD
+  </a>
+
+  <a class="menu-tile filter-functions" href="filter-on-sale">
+    ON_SALE
+  </a>
+
+  <a class="menu-tile filter-functions" href="filter-to-sold">
+    SOLD
+  </a>
+
+   <!-- Filters & Tools Section -->
+  <h2 class="section-title">PAYMENT</h2>
+
+  <a class="menu-tile management-functions" href="payment-dashboard">
+    PAID_PAYMENT_DETAILS
+  </a>
+
+  <a class="menu-tile management-functions" href="payu-payment-dashboard">
+    PAYU_PAYMENT_STATUS
+  </a>
+
+
+    <!-- Similar Product & Tools Section -->
+  <h2 class="section-title">Similar Product</h2>
+  
+  <a class="menu-tile olx-functions"  href="similar-tread-dashboard/">
+    Similar Product
+  </a>
+
+  <h2 class="section-title">Reports</h2>
+  
+  <a class="menu-tile report-functions"  href="tread_depths_combinations">
+    Tread depth combinations
+  </a>
+
+  <a class="menu-tile report-functions"  href="ean_combinations">
+    EAN combinations
+  </a>
+
+  <a class="menu-tile report-functions" href="statistics">
+    Statystyki
+  </a>
+
+  <h2 class="section-title">Magazyny</h2>
+  
+  <a class="menu-tile warehouse-functions"  href="warehouses">
+    Magazyny
+  </a>
+
+  <a class="menu-tile warehouse-functions"  href="assign_location">
+    Zmień miejsce
+  </a>
+
+  <a class="menu-tile warehouse-functions"  href="create_staple">
+    Dodaj sztapel
+  </a>
+
+  
+
+  <h2 class="section-title">Pozostałe</h2>
+  <a class="menu-tile core-functions" href="{% url 'tyreadderapp:selected_label' %}">
+    Drukuj etykiety zbiorczo
+  </a>
+  <a class="menu-tile filter-functions" href="downloads">
+    Download
+  </a>
+
+  <a class="menu-tile filter-functions" href="imports">
+    Import
+  </a>
+
+
+   <!-- OLX Section -->
+<div class="olx-section">
+  <h2 class="section-title">
+    OLX
+    <span class="toggle-arrow" onclick="toggleDropdown(this)">&#9660;</span>
+  </h2>
+  
+  <div class="section-links">
+    <a class="menu-tile olx-functions" href="/olx/select/bulk-product-olx">
+      Dodaj zbiorczo do OLX
+    </a>
+
+    <a class="menu-tile olx-functions" href="pairadverts">
+      Add Pair OLX
+    </a>
+
+    <a class="menu-tile olx-functions" href="add-image">
+      Add Pair Image OLX
+    </a>
+  </div>
+</div>
+
+
+
+<!-- Otomoto Section -->
+<div class="otomoto-section">
+  <h2 class="section-title">
+    OTOMOTO
+    <span class="toggle-arrow" onclick="toggleDropdown(this)">&#9660;</span>
+  </h2>
+  
+  <div class="section-links">
+    <a class="menu-tile filter-functions" href="/otomoto/otomoto-inactive/">
+      Nieaktywne otomoto
+    </a>
+
+    <a class="menu-tile filter-functions" href="/otomoto/otomoto-active/">
+      Aktywne otomoto
+    </a>
+
+    <a class="menu-tile filter-functions" href="/otomoto/inactive_otomoto_pairs/">
+      Nieaktywne pary otomoto
+    </a>
+    <a class="menu-tile filter-functions" href="/otomoto/active_otomoto_pairs/">
+      Aktywne pary otomoto
+    </a>
+    <a class="menu-tile filter-functions" href="/otomoto/auth-otomoto-active/">
+      Aktywne otomoto - AUTH
+    </a>
+  </div>
+  
+</div>
+
+
+<!-- Allegro Section -->
+<div class="allegro-section">
+  <h2 class="section-title">
+    ALLEGRO
+    <span class="toggle-arrow" onclick="toggleDropdown(this)">&#9660;</span>
+  </h2>
+  
+  <div class="section-links">
+    <!-- <a href="/allegro/connect_allegro/" class="connect-btn">
+      Connect Allegro
+  </a> -->
+
+  <a href="{% url 'allegro:connect_allegro' %}" class="connect-btn">
+    Connect Allegro
+  </a>
+  <a href="{% url 'allegro:inactive_allegro' %}" class="connect-btn">
+    Inactive Allegro
+  </a>
+  <a href="{% url 'allegro:active_allegro' %}" class="connect-btn">
+    Active Allegro
+  </a>
+  
+
+
+    
+  </div>
+  
+</div>
+
+
+
+</div>
+{% endblock %}
+
+<script>
+  function toggleDropdown(el) {
+    // Find the closest parent that contains the links container
+    const section = el.closest('.olx-section, .otomoto-section'); // works for both sections
+    if (!section) return;
+
+    const sectionLinks = section.querySelector('.section-links');
+    if (!sectionLinks) return;
+
+    // Toggle visibility
+    if (sectionLinks.style.display === 'block') {
+      sectionLinks.style.display = 'none';
+    } else {
+      sectionLinks.style.display = 'block';
+    }
+
+    // Toggle arrow rotation class
+    el.classList.toggle('open');
+  }
+</script>

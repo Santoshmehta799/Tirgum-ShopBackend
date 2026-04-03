@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect to Otomoto</title>
+</head>
+<body>
+    <h1>Connect Your Otomoto Account</h1>
+
+    <p>Click the button below to authorize our app to access your Otomoto account.</p>
+
+    <!-- Redirect user to Otomoto authorization URL -->
+    <a href="{% url 'otomoto:authorize_otomoto' %}">
+        <button type="button">Connect to Otomoto</button>
+    </a>
+</body>
+</html>
+

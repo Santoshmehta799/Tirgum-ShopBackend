@@ -1,0 +1,599 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://unpkg.com/htmx.org@1.5.0/dist/htmx.js"></script>
+    <title>Tyre Form</title>
+    <style>
+        label {
+            font-size: 2rem;
+        }
+        .toggle {
+            width: 150px;
+            height: 40px;
+            border-radius: 10%;
+            background-color: yellow;
+            padding: 10px;
+        }
+
+        .single__checkbox {
+            background-color: rgb(41, 41, 41);
+            margin: 2rem 0;
+            border-radius: 1rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            align-items: center;
+        }
+
+        .single__checkbox input[type=checkbox] {
+            height: 6rem;
+            width: 4rem;
+            border-radius: 2rem;
+        }
+
+        .form-select-lg {
+            padding-top: 1rem; 
+            padding-bottom: 1rem; 
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+    
+        .image-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+    
+        .button-container form {
+            display: flex;
+            align-items: center;
+        }
+    
+        .button-container .btn {
+            margin-right: 10px;
+        }
+    
+        .current-image {
+            width: 400px;
+            height: 309px;
+        }
+
+        .tyre_id {
+            font-size: 8rem;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+
+        .custom-form-container {
+            display: none;
+        }
+
+        .custom-form-container .custom-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .custom-form-container .custom-form-control {
+            width: 1286px;
+            background-color: white;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            width: 1262px
+        }
+        
+        .status-color {
+            background: #D0F4F4;
+        }
+        .status-color option {
+            background-color: white; 
+            color: black; 
+        }
+    </style>
+
+</head>
+
+<body class="bg-dark text-white container text-center">
+<div class="all_form_data">
+    <h1>Dodaj oponę</h1>
+
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+    {% else %}
+        <form id="post_form" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %} 
+
+        <div>
+            <div class="tyre_id">ID: {{ product.id }}</div>
+        </div>
+
+        <div>
+
+            {% if form.status %}
+                <div class="mb-3">
+                    <label for="id_status" class="form-label">Status</label>
+                    <select name="status" id="id_status" class="form-select status-color form-select-lg">
+                        {% for id, name in form.fields.status.choices %}
+                            <option value="{{ id }}" {% if product.status == id %}selected="selected"{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+        
+        </div>
+
+        <div>
+            <button id="main-update-btn" class="btn btn-warning btn-lg w-100 my-3" type="button">Update</button>
+        </div>
+
+        <div>
+        {% if form.brand %}
+        <div class="mb-3">
+            <label for="id_brand" class="form-label">Brand</label>
+            <select name="brand" class="form-select form-select-lg"
+                    hx-trigger="change" hx-get="treads" hx-swap="innerHTML" hx-target="#id_tread" hx-vals='{"?brand": "#brand"}'>
+                {% for id, name in form.fields.brand.choices %}
+                    <option value="{{ id }}" {% if product.brand.id == id %}selected="selected"{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        {% if 'form.tread' %}
+            <div class="data">
+                <label for="tread">Tread</label>
+                <select
+                        name="tread"
+                        id="id_tread"
+                        hx-trigger="change"
+                        hx-swap="innerHTML"
+                        hx-vals='{"?tread": "#tread"}'
+                        class="form-select form-select-lg py-3 mb-3"
+                >
+                    {% for id,name in form.fields.tread.choices %}
+                        <option  value="{{ id }}" {% if product.tread.id == id %}selected="selected"{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        {% if 'form.size' %}
+            <div class="data">
+                <label for="size">Size</label>
+                <select
+                        name="size"
+                        id="id_size"
+                        hx-trigger="change"
+                        hx-swap="innerHTML"
+                        hx-vals='{"?size": "#size"}'
+                        class="form-select form-select-lg py-3 mb-3"
+                >
+                    {% for id,name in form.fields.size.choices %}
+                        <option value="{{ id }}"{% if product.size.id == id %}selected="selected"{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        {% if 'form.front_repairs ' %}
+            <div class="data">
+                <label for="front_repairs">Naprawy gwoździowe</label>
+                <select
+                        name="front_repairs"
+                        id="id_front_repairs"
+                        hx-trigger="change"
+                        hx-swap="innerHTML"
+                        hx-vals='{"?front_repairs": "#front_repairs"}'
+                        class="form-select form-select-lg py-3 mb-3"
+                >
+                    {% for id,name in form.fields.front_repairs.choices %}
+                        <option  value="{{ id }}" {% if product.front_repairs == id %}selected="selected"{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+
+        </div>
+
+
+        <div class="checkbox__collection">
+
+            {% if form.is_tire_bead_damaged %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_tire_bead_damaged.label }}</label>
+                    <div>{{ form.is_tire_bead_damaged }}</div>
+                </div>
+            {% endif %}
+
+            {% if form.is_incised %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_incised.label }}</label>
+                    <div>{{ form.is_incised }}</div>
+                </div>
+            {% endif %}
+
+            {% if form.is_front_heat_repair %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_front_heat_repair.label }}</label>
+                    <div>{{ form.is_front_heat_repair }}</div>
+                </div>
+            {% endif %}
+
+            {% if form.is_side_repair %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_side_repair.label }}</label>
+                    <div>{{ form.is_side_repair }}</div>
+                </div>
+            {% endif %}
+
+            {% if form.is_visible_cracks %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_visible_cracks.label }}</label>
+                    <div>{{ form.is_visible_cracks }}</div>
+                </div>
+            {% endif %}
+
+            {% if form.is_braked %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_braked.label }}</label>
+                    <div>{{ form.is_braked }}</div>
+                </div>
+            {% endif %}
+
+
+            {% if form.is_braked_repair %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_braked_repair.label }}</label>
+                    <div>{{ form.is_braked_repair }}</div>
+                </div>
+            {% endif %}
+
+
+            {% if form.is_shoulder_repair %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_shoulder_repair.label }}</label>
+                    <div>{{ form.is_shoulder_repair }}</div>
+                </div>
+            {% endif %}
+
+
+            {% if form.is_cosmetology %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_cosmetology.label }}</label>
+                    <div>{{ form.is_cosmetology }}</div>
+                </div>
+            {% endif %}
+
+
+            {% if form.is_toothed_out %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_toothed_out.label }}</label>
+                    <div>{{ form.is_toothed_out }}</div>
+                </div>
+            {% endif %}
+
+
+            {% if form.is_retreaded %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_retreaded.label }}</label>
+                    <div>{{ form.is_retreaded }}</div>
+                </div>
+            {% endif %}
+
+
+        </div>
+
+
+        <div class="checkbox__collection bg-warning py-3 px-2 rounded">
+            {% if form.is_ruts %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_ruts.label }}</label>
+                    <div>{{ form.is_ruts }}</div>
+                </div>
+            {% endif %} {% if form.is_circumventional_cut %}
+            <div class="single__checkbox">
+                <label>{{ form.is_circumventional_cut.label }}</label>
+                <div>{{ form.is_circumventional_cut }}</div>
+            </div>
+        {% endif %}
+        </div>
+
+
+        <div class="my-5">
+
+            {% if form.tread_depth_min %}
+                <div class="data">
+                    <label for="id_tread_depth_min">Min. głębokość bieżnika</label>
+                    <input type="text" name="tread_depth_min" class="form-control form-control-lg py-3 mb-3" value="{{ form.tread_depth_min.value }}">
+                </div>
+            {% endif %}
+
+
+            {% if form.tread_depth_max %}
+                <div class="data">
+                    <label for="id_tread_depth_max">Max. głębokość bieżnika</label>
+                    <input type="text" name="tread_depth_max"  class="form-control form-control-lg py-3 mb-3" value="{{ form.tread_depth_max.value }}">
+                </div>
+            {% endif %}
+
+
+            {% if form.dot %}
+                <div class="data">
+                    <label for="id_dot">DOT</label>
+                    <input type="text" name="dot"  class="form-control form-control-lg py-3 mb-3" value="{% if form.dot.value %}{{ form.dot.value }}{% else %}0{% endif %}">
+                </div>
+            {% endif %}
+
+            {% if form.supplier_price %}
+                <div class="data">
+                    <label for="id_supplier_price">Supplier Price</label>
+                    <input type="text" name="supplier_price"  class="form-control form-control-lg py-3 mb-3" value="{% if form.supplier_price.value %}{{ form.supplier_price.value }}{% else %}0{% endif %}">
+                </div>
+            {% endif %}
+
+
+            {% if form.net_price %}
+                <div class="data">
+                    <label for="id_net_price">Cena netto</label>
+                    <input type="text" name="net_price" class="form-control form-control-lg py-3 mb-3" value="{{ form.net_price.value }}">
+                </div>
+            {% endif %}
+
+
+            {% if form.pair %}
+                <div class="data">
+                    <label for="pair">Pair</label>
+                    <select
+                            name="pair"
+                            id="id_pair"
+                            hx-trigger="change"
+                            hx-swap="innerHTML"
+                            hx-vals='{"?pair": "#pair"}'
+                            class="form-select form-select-lg py-3 mb-3"
+                    >
+                        {% for id, name in form.fields.pair.choices %}
+                            <option value="{{ id }}" {% if product.pair and product.pair.id == id %}selected="selected"{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+        
+        
+            {% if form.warehouse %}
+<div class="data">
+    <label for="{{ form.warehouse.id_for_label }}">Warehouse</label>
+    <select name="{{ form.warehouse.name }}" class="form-select form-select-lg py-3 mb-3" id="{{ form.warehouse.id_for_label }}">
+        <option value="">Select a warehouse</option>
+        {% for option in form.fields.warehouse.choices %}
+            <option value="{{ option.0 }}"
+                    {% if form.initial.warehouse == option.0 or form.warehouse.value == option.0 %}selected{% endif %}>
+                {{ option.1 }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
+
+
+{% if form.rack %}
+<div class="data">
+    <label for="{{ form.rack.id_for_label }}">Rack</label>
+    <select name="{{ form.rack.name }}" class="form-select form-select-lg py-3 mb-3" id="{{ form.rack.id_for_label }}">
+        <option value="">Select a rack</option>
+        {% for option in form.fields.rack.choices %}
+            <option value="{{ option.0 }}"
+                {% if form.initial.rack == option.0 or form.rack.value == option.0 %}selected{% endif %}>
+                {{ option.1 }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
+
+{% if form.row %}
+<div class="data">
+    <label for="{{ form.row.id_for_label }}">Row</label>
+    <select name="{{ form.row.name }}" class="form-select form-select-lg py-3 mb-3" id="{{ form.row.id_for_label }}">
+        <option value="">Select a row</option>
+        {% for option in form.fields.row.choices %}
+            <option value="{{ option.0 }}"
+                {% if form.initial.row == option.0 or form.row.value == option.0 %}selected{% endif %}>
+                {{ option.1 }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
+
+                    
+      
+
+        <div class="mb-3">
+            {% if form.weight %}
+                <div class="data">
+                    <label for="id_weight" class="custom-label">Weight</label>
+                    <input type="text" name="weight" class="form-control form-control-lg py-3 mb-3" value="{% if form.weight.value %}{{ form.weight.value }}{% else %}0{% endif %}">
+                </div>
+            {% endif %}
+        </div>
+        
+
+            <br>
+            <br>
+            <button type="button" onclick="showHideToggle()" class="toggle">Show textfield</button>
+            <br>
+            <br>
+
+            <div id="myDIV" class="custom-form-container">
+                {% if form.additional_text %}
+                    <div>
+                        <div class="custom-label">{{ form.additional_text.label }}</div>
+                        <div class="custom-form-control">{{ form.additional_text }}</div>
+                    </div>
+                {% endif %}
+            </div>
+            
+    
+
+
+        </div>
+
+        <div class="form-group">
+            <label for="product_image">Wybierz zdjęcia</label>
+            <input type="file" name="product_image" id="product_image" accept="image/*" class="form-control form-control-lg py-3 mb-3" multiple>
+            {% if product.images.all %}<p>Current Images:</p>{% endif %}
+            <div class="image-container">
+                {% if product.images.all %}
+                    {% for image in product.images.all %}
+                        <div class="image-item">
+                            <img src="{{ image.image.url }}" alt="Product Image {{ forloop.counter }}" class="current-image custom-image" style="width:400px;height:309px;">
+                            <div class="button-container">
+                                <form method="post" action="{% url 'tyreadderapp:delete_image' image.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                <form method="post" action="{% url 'tyreadderapp:update_image' image.id %}" enctype="multipart/form-data" class="image-update-form" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="file" name="new_image" accept="image/*" class="new-image-input">
+                                    <button type="submit" class="btn btn-primary image-update-btn">Update</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No current images</p>
+                {% endif %}
+            </div>
+        </div>
+   
+    
+
+       
+        {% comment %} <button class="btn btn-warning btn-lg w-100 my-3" type="submit">Update</button> {% endcomment %}
+    </form>
+
+    <form id="delete_form" method="post" action="{% url 'tyreadderapp:delete_product' product.id %}">
+        {% csrf_token %}
+        <a class="btn btn-danger btn-lg w-100 my-3" href="{% url 'tyreadderapp:delete_product' product.id  %}">Delete Product</a>
+    </form>
+    {% endif %}
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+
+<script>
+    function showSelectedFiles(input) {
+        const files = input.files;
+        if (!files.length) {
+            document.getElementById('selected_files').textContent = 'No files selected';
+            return;
+        }
+
+        const selectedFileNames = [];
+        for (const file of files) {
+            selectedFileNames.push(file.name);
+        }
+
+        const fileNamesText = selectedFileNames.join('\n');
+        document.getElementById('selected_files').textContent = 'Selected files: ' + fileNamesText;
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageContainer = document.querySelector('.image-container');
+    
+        imageContainer.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('image-update-btn')) {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                const formData = new FormData(form);
+    
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const imageItem = form.closest('.image-item');
+                        const img = imageItem.querySelector('img');
+                        img.src = data.new_image_url;
+                        alert('Image updated successfully');
+                    } else {
+                        alert('Failed to update image');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating the image');
+                });
+            }
+        });
+    
+        const mainForm = document.getElementById('post_form');
+        const mainUpdateBtn = document.getElementById('main-update-btn');
+    
+        mainUpdateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to update the product?')) {
+                mainForm.submit();
+            }
+        });
+    });
+</script>
+
+
+<script>
+    function showHideToggle() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+
+</html>

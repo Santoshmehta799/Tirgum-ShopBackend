@@ -1,0 +1,793 @@
+{
+    "id": 167,
+    "names": {
+        "pl": "Części do pojazdów ciężarowych",
+        "en": "Parts for Truck"
+    },
+    "parent_id": 161,
+    "code": "ciezarowe",
+    "path_url": "czesci/ciezarowe",
+    "depth": 2,
+    "parameters": [
+        {
+            "code": "title",
+            "type": "input",
+            "labels": {
+                "pl": "Tytuł",
+                "en": "Title"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {}
+        },
+        {
+            "code": "parts-type",
+            "type": "select",
+            "labels": {
+                "pl": "Rodzaj części",
+                "en": "Type"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "akcesoria": {
+                    "pl": "Akcesoria",
+                    "en": "Accessories"
+                },
+                "car-audio": {
+                    "pl": "Sprzęt car audio",
+                    "en": "Car Audio Parts"
+                },
+                "filtry": {
+                    "pl": "Filtry",
+                    "en": "Filters"
+                },
+                "karoseria": {
+                    "pl": "Karoseria",
+                    "en": "Bodywork"
+                },
+                "elementy-wnetrza": {
+                    "pl": "Elementy wnętrza",
+                    "en": "Interiors"
+                },
+                "kola": {
+                    "pl": "Koła",
+                    "en": "Wheels"
+                },
+                "felgi": {
+                    "pl": "Felgi",
+                    "en": "Rims"
+                },
+                "opony": {
+                    "pl": "Opony",
+                    "en": "Tyres"
+                },
+                "ogrzewanie-wentylacja-klimatyzacja": {
+                    "pl": "Ogrzewanie/wentylacja/klimatyzacja",
+                    "en": "Air conditioning/ heating/ ventilation"
+                },
+                "oswietlenie": {
+                    "pl": "Oświetlenie",
+                    "en": "Lighting"
+                },
+                "skrzynia-biegow": {
+                    "pl": "Skrzynia biegów",
+                    "en": "Gear Box"
+                },
+                "silnik": {
+                    "pl": "Silnik",
+                    "en": "Motor and Components (engine)"
+                },
+                
+                "uklad-napedowy": {
+                    "pl": "Układ napędowy",
+                    "en": "Drive System"
+                },
+               
+                "inne": {
+                    "pl": "Inne",
+                    "en": "Others"
+                },
+                
+                "oleje-plyny-i-chemia": {
+                    "pl": "Oleje, płyny i chemia",
+                    "en": "Oils, Fluid, & Chemicals"
+                },
+               
+            }
+        },
+        {
+            "code": "delivery",
+            "type": "select",
+            "labels": {
+                "pl": "Dostawa",
+                "en": "Delivery"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "1": {
+                    "pl": "Tak",
+                    "en": "Yes"
+                }
+            }
+        },
+        {
+            "code": "fuel_type",
+            "type": "select",
+            "labels": {
+                "pl": "Rodzaj paliwa",
+                "en": "Fuel type"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "petrol": {
+                    "pl": "Benzyna",
+                    "en": "Petrol"
+                },
+                "petrol-lpg": {
+                    "pl": "Benzyna+LPG",
+                    "en": "Petrol+LPG"
+                },
+                
+            }
+        },
+        {
+            "code": "position",
+            "type": "checkboxes",
+            "labels": {
+                "pl": "Strona zabudowy",
+                "en": "Position"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "rear": {
+                    "pl": "Tył",
+                    "en": "Rear"
+                
+            }
+        },
+        {
+            "code": "tire-width",
+            "type": "select",
+            "labels": {
+                "pl": "Szerokość opony",
+                "en": "Tire Width"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "560-mm": {
+                    "pl": "560 mm",
+                    "en": "560 mm"
+                },
+                "1050-mm": {
+                    "pl": "1050 mm",
+                    "en": "1050 mm"
+                },
+                "others": {
+                    "pl": "Inny",
+                    "en": "Others"
+                },
+                "31-00": {
+                    "pl": "31.00\"",
+                    "en": "31.00\""
+                },
+                
+                "305-mm": {
+                    "pl": "305 mm",
+                    "en": "305 mm"
+                },
+                "300-mm": {
+                    "pl": "300 mm",
+                    "en": "300 mm"
+                },
+                
+                
+                
+            }
+        },
+        {
+            "code": "wet-grip",
+            "type": "select",
+            "labels": {
+                "pl": "Przyczepność na mokrej nawierzchni",
+                "en": "Wet Grip"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "class-g": {
+                    "pl": "Klasa G",
+                    "en": "Class G"
+                },
+                
+                "class-a": {
+                    "pl": "Klasa A",
+                    "en": "Class A"
+                }
+            }
+        },
+        {
+            "code": "speed-index",
+            "type": "select",
+            "labels": {
+                "pl": "Indeks prędkości",
+                "en": "Speed Index"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "y-to-300-km-h": {
+                    "pl": "Y do 300 km/h",
+                    "en": "Y to 300 km/h"
+                },
+                "w-to-270-km-h": {
+                    "pl": "W do 270 km/h",
+                    "en": "W to 270 km/h"
+                },
+                "v-to-240-km-h": {
+                    "pl": "V do 240 km/h",
+                    "en": "V to 240 km/h"
+                },
+                
+                
+                "a1-to-5km-h": {
+                    "pl": "A1 do 5km/h",
+                    "en": "A1 to 5km/h"
+                }
+            }
+        },
+        {
+            "code": "external-noise",
+            "type": "select",
+            "labels": {
+                "pl": "Poziom głośności",
+                "en": "External noise"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "80-db": {
+                    "pl": "80 dB",
+                    "en": "80 dB"
+                },
+                
+                
+                
+                "60-db": {
+                    "pl": "60 dB",
+                    "en": "60 dB"
+                }
+            }
+        },
+        {
+            "code": "height-aspect-ratio",
+            "type": "select",
+            "labels": {
+                "pl": "Profil",
+                "en": "Height Aspect Ratio"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "other": {
+                    "pl": "inny",
+                    "en": "other"
+                },
+                "100": {
+                    "pl": "100",
+                    "en": "100"
+                },
+                
+                "40": {
+                    "pl": "40",
+                    "en": "40"
+                },
+               
+            }
+        },
+        {
+            "code": "rolling-resistance",
+            "type": "select",
+            "labels": {
+                "pl": "Opór toczenia",
+                "en": "Rolling Resistance"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "class-g": {
+                    "pl": "Klasa G",
+                    "en": "Class G"
+                },
+                
+                "class-a": {
+                    "pl": "Klasa A",
+                    "en": "Class A"
+                }
+            }
+        },
+        {
+            "code": "tire-brand",
+            "type": "select",
+            "labels": {
+                "pl": "Producent",
+                "en": "Tire Brand"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "others": {
+                    "pl": "Others",
+                    "en": "Others"
+                },
+                "zeetex": {
+                    "pl": "Zeetex",
+                    "en": "Zeetex"
+                },
+                
+                "hankook": {
+                    "pl": "Hankook",
+                    "en": "Hankook"
+                },
+                "gt-radial": {
+                    "pl": "GT Radial",
+                    "en": "GT Radial"
+                },
+                
+                "cultor": {
+                    "pl": "Cultor",
+                    "en": "Cultor"
+                },
+               
+            }
+        },
+        {
+            "code": "parts-category",
+            "type": "selecttree",
+            "labels": {
+                "pl": "Kategoria części",
+                "en": "Parts Category"
+            },
+            "required": true,
+            "purpose": "both",
+            "options": {
+                "akcesoria": {
+                    "pl": "Akcesoria",
+                    "en": "Accessories"
+                },
+                
+                "karoseria": {
+                    "pl": "Karoseria",
+                    "en": "Bodywork"
+                },
+                
+                "kola": {
+                    "pl": "Koła",
+                    "en": "Wheels"
+                },
+                "felgi": {
+                    "pl": "Felgi",
+                    "en": "Rims"
+                },
+                "opony": {
+                    "pl": "Opony",
+                    "en": "Tyres"
+                },
+                
+            }
+        },
+        {
+            "code": "title_parts",
+            "type": "input",
+            "labels": {
+                "pl": "Tytuł",
+                "en": "Title"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {}
+        },
+        {
+            "code": "warranty",
+            "type": "input",
+            "labels": {
+                "pl": "Gwarancja",
+                "en": "Warranty"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {}
+        },
+        {
+            "code": "compatibility",
+            "type": "multiinput",
+            "labels": {
+                "pl": "Zgodność",
+                "en": "Compatibility"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {}
+        },
+        {
+            "code": "wheels-rims",
+            "type": "select",
+            "labels": {
+                "pl": "Rodzaj felg",
+                "en": "Rims type"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "kola-rims-type-alloy": {
+                    "pl": "Aluminiowe",
+                    "en": "Alloy"
+                },
+                "kola-rims-type-steel": {
+                    "pl": "Stalowe",
+                    "en": "Steel"
+                }
+            }
+        },
+        {
+            "code": "wheels-tyres",
+            "type": "select",
+            "labels": {
+                "pl": "Typ",
+                "en": "Tyres type"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "kola-tyres-type-summer": {
+                    "pl": "Letnie",
+                    "en": "Summer"
+                },
+                "kola-tyres-type-winter": {
+                    "pl": "Zimowe",
+                    "en": "Winter"
+                },
+                "kola-tyres-type-allseason": {
+                    "pl": "Całoroczne",
+                    "en": "All season"
+                }
+            }
+        },
+        {
+            "code": "video",
+            "type": "input",
+            "labels": {
+                "pl": "Film na YouTube",
+                "en": "Add Youtube video url"
+            },
+            "required": false,
+            "purpose": "add",
+            "options": {}
+        },
+        {
+            "code": "rims-type",
+            "type": "select",
+            "labels": {
+                "pl": "Rodzaj felg",
+                "en": "Rims type"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "felgi-type-alloy": {
+                    "pl": "Aluminiowe",
+                    "en": "Alloy"
+                },
+                "felgi-type-steel": {
+                    "pl": "Stalowe",
+                    "en": "Steel"
+                }
+            }
+        },
+        {
+            "code": "rims-inches",
+            "type": "select",
+            "labels": {
+                "pl": "Cale",
+                "en": "Inches"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "felgi-inches-22": {
+                    "pl": "22 i większe",
+                    "en": "22 and bigger"
+                },
+                "felgi-inches-21": {
+                    "pl": "21",
+                    "en": "21"
+                },
+                "felgi-inches-20": {
+                    "pl": "20",
+                    "en": "20"
+                },
+                "felgi-inches-19-5": {
+                    "pl": "19,5",
+                    "en": "19,5"
+                },
+                "felgi-inches-19": {
+                    "pl": "19",
+                    "en": "19"
+                },
+                "felgi-inches-18": {
+                    "pl": "18",
+                    "en": "18"
+                },
+                "felgi-inches-17-5": {
+                    "pl": "17,5",
+                    "en": "17,7"
+                },
+                "felgi-inches-17": {
+                    "pl": "17",
+                    "en": "17"
+                },
+                "felgi-inches-16-5": {
+                    "pl": "16,5",
+                    "en": "16,5"
+                },
+                "felgi-inches-16": {
+                    "pl": "16",
+                    "en": "16"
+                },
+                "felgi-inches-15": {
+                    "pl": "15",
+                    "en": "15"
+                },
+                "felgi-inches-14": {
+                    "pl": "14",
+                    "en": "14"
+                },
+                "felgi-inches-13": {
+                    "pl": "13",
+                    "en": "13"
+                },
+                "felgi-inches-12": {
+                    "pl": "12 i mniejsze",
+                    "en": "12 and smaller"
+                }
+            }
+        },
+        {
+            "code": "tyres-type",
+            "type": "select",
+            "labels": {
+                "pl": "Typ opon",
+                "en": "Tyres type"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "opony-type-summer": {
+                    "pl": "Letnie",
+                    "en": "Summer"
+                },
+                "opony-type-winter": {
+                    "pl": "Zimowe",
+                    "en": "Winter"
+                },
+                "opony-type-allseason": {
+                    "pl": "Całoroczne",
+                    "en": "All season"
+                }
+            }
+        },
+        {
+            "code": "tyres-inches",
+            "type": "select",
+            "labels": {
+                "pl": "Cale",
+                "en": "Inches"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "opony-inches-22": {
+                    "pl": "22 i większe",
+                    "en": "22 and bigger"
+                },
+                "opony-inches-21": {
+                    "pl": "21",
+                    "en": "21"
+                },
+                "opony-inches-20": {
+                    "pl": "20",
+                    "en": "20"
+                },
+                "opony-inches-19-5": {
+                    "pl": "19,5",
+                    "en": "19,5"
+                },
+                
+                "opony-inches-17-5": {
+                    "pl": "17,5",
+                    "en": "17,7"
+                },
+                "opony-inches-17": {
+                    "pl": "17",
+                    "en": "17"
+                },
+                "opony-inches-16-5": {
+                    "pl": "16,5",
+                    "en": "16,5"
+                },
+                "opony-inches-16": {
+                    "pl": "16",
+                    "en": "16"
+                },
+                "opony-inches-15": {
+                    "pl": "15",
+                    "en": "15"
+                },
+                "opony-inches-14": {
+                    "pl": "14",
+                    "en": "14"
+                },
+                "opony-inches-13": {
+                    "pl": "13",
+                    "en": "13"
+                },
+                "opony-inches-12": {
+                    "pl": "12 i mniejsze",
+                    "en": "12 and smaller"
+                }
+            }
+        },
+        {
+            "code": "tyres-profile",
+            "type": "select",
+            "labels": {
+                "pl": "Profil",
+                "en": "Profile"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "opony-profile-another": {
+                    "pl": "Pozostałe",
+                    "en": "Another"
+                },
+                "opony-profile-7": {
+                    "pl": "7.00",
+                    "en": "7.00"
+                },
+                "opony-profile-9-5": {
+                    "pl": "9.5",
+                    "en": "9.5"
+                },
+                "opony-profile-9-50": {
+                    "pl": "9.50",
+                    "en": "9.50"
+                },
+                "opony-profile-10-5": {
+                    "pl": "10.5",
+                    "en": "10.5"
+                },
+                "opony-profile-10-50": {
+                    "pl": "10.50",
+                    "en": "10.50"
+                },
+                "opony-profile-11-50": {
+                    "pl": "11.50",
+                    "en": "11.50"
+                },
+                "opony-profile-12-50": {
+                    "pl": "12.50",
+                    "en": "12.50"
+                },
+                "opony-profile-25": {
+                    "pl": "25",
+                    "en": "25"
+                },
+                "opony-profile-30": {
+                    "pl": "30",
+                    "en": "30"
+                },
+                "opony-profile-35": {
+                    "pl": "35",
+                    "en": "35"
+                },
+                "opony-profile-40": {
+                    "pl": "40",
+                    "en": "40"
+                },
+                
+                "opony-profile-60": {
+                    "pl": "60",
+                    "en": "60"
+                },
+                "opony-profile-65": {
+                    "pl": "65",
+                    "en": "65"
+                },
+                "opony-profile-70": {
+                    "pl": "70",
+                    "en": "70"
+                },
+                "opony-profile-75": {
+                    "pl": "75",
+                    "en": "75"
+                },
+                "opony-profile-80": {
+                    "pl": "80",
+                    "en": "80"
+                },
+                "opony-profile-85": {
+                    "pl": "85",
+                    "en": "85"
+                }
+            }
+        },
+        {
+            "code": "manufacturer_code",
+            "type": "input",
+            "labels": {
+                "pl": "Numer referencyjny producenta",
+                "en": "Manufacturer Reference Code"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {}
+        },
+        {
+            "code": "manufacturer",
+            "type": "input",
+            "labels": {
+                "pl": "Producent części",
+                "en": "Manufacturer"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {}
+        },
+        {
+            "code": "price",
+            "type": "price",
+            "labels": {
+                "pl": "Cena",
+                "en": "Price"
+            },
+            "required": true,
+            "purpose": "both",
+            "options": {
+                "price": {
+                    "pl": "Cena",
+                    "en": "Price"
+                },
+                "arranged": {
+                    "pl": "Do negocjacji",
+                    "en": "Arranged"
+                }
+            }
+        },
+        {
+            "code": "make",
+            "type": "select",
+            "labels": {
+                "pl": "Marka pojazdu",
+                "en": "Make"
+            },
+            "required": false,
+            "purpose": "both",
+            "options": {
+                "versalift": {
+                    "pl": "Versalift",
+                    "en": "Versalift"
+                },                
+                
+                "remet-cnc-technology": {
+                    "pl": "Remet CNC Technology",
+                    "en": "Remet CNC Technology"
+                }
+            }
+        }
+    ]
+}

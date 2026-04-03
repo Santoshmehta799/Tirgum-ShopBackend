@@ -1,0 +1,56 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'tyreadderapp/addform.css' %}" />
+{% endblock %} 
+
+ 
+  
+  {% block content %}
+  
+  <div class="form-container">
+    <p class="title">Dodaj oponę</p>
+    
+    
+    {{form.errors}}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %} 
+      <!-- {{form.as_p}} -->
+      <div class="main_params">
+        {{form.brand}}{{form.brand.label}}        
+        {{form.tread}}{{form.tread.label}}
+        {{form.width}}{{form.width.label}}      
+      </div>
+
+      <div class="checkbox_container">
+        <div class="checkbox_item">{{form.is_tire_bead_damaged.label}} {{form.is_tire_bead_damaged}}</div>
+        <div class="checkbox_item">{{form.is_incised.label}} {{form.is_incised}}</div>
+        <div class="checkbox_item">{{form.is_front_repair.label}} {{form.is_front_repair}}</div>
+        <div class="checkbox_item">{{form.is_side_repair_one.label}}{{form.is_side_repair_one}}</div>
+        <div class="checkbox_item">{{form.is_side_repair_two.label}} {{form.is_side_repair_two}}</div>
+        <div class="checkbox_item">{{form.is_visible_cracks.label}}{{form.is_visible_cracks}}</div>
+        <div class="checkbox_item">{{form.side_tread_cut.label}}{{form.side_tread_cut}}</div>
+        <div class="checkbox_item">{{form.is_braked.label}}{{form.is_braked}}</div>
+        <div class="checkbox_item">{{form.is_toothed_out.label}}{{form.is_toothed_out}}</div>
+        <div class="checkbox_item">{{form.retreaded.label}}{{form.retreaded}}</div>   
+      </div>
+      <div>
+        <div>{{form.tread_depth_min.label}}{{form.tread_depth_min}}</div>
+        <div>{{form.tread_depth_max.label}}{{form.tread_depth_max}}</div>
+        <div>{{form.dot.label}}{{form.dot}}</div>
+        <div>{{form.net_price.label}}{{form.net_price}}</div>
+        <div>{{form.supplier_price.label}}{{form.supplier_price}}</div>      
+        
+    </div>
+    <input type="file" multiple name ="files" id="image" required>
+
+      <button type="submit">Submit</button>
+    </form>
+    <a href="main">
+      <button type="button">Strona główna</button>
+    </a>
+  
+
+  <!-- </div> -->
+ 
+</form>
+</div>
+{% endblock %}

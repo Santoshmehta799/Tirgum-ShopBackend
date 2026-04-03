@@ -1,0 +1,66 @@
+.form-container {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 400px;
+  height: auto;
+  background-color: #808080;
+}
+
+.title {
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  font-size: 30px;
+}
+
+.main_params {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+}
+
+select {
+  margin: auto;
+  width: 90%;
+  height: 70px;
+  border-radius: 12px;
+  /* margin-top: 20px; */
+  background-color: orange;
+  font-size: 32px;
+}
+
+option {
+  height: 40px;
+  background-color: white;
+  text-align: center;
+  font-size: 32px;
+  /* margin-top: 60px; */
+}
+
+.checkbox_container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #808080;
+  color: white;
+  font-size: 20px;
+  text-align: justify;
+}
+
+.checkbox_container input {
+  height: 50px;
+}
+
+.checkbox_item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-top: 20px;
+}

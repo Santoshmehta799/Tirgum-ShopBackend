@@ -1,0 +1,11 @@
+{% extends "tyreadderapp/base/base.html" %} {% load static %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'tyreadderapp/tyre-delete.css' %}" />
+{% endblock %} {% block content %}
+
+<form method="post">
+  {% csrf_token %}
+
+  <p>Czy jesteś pewien, że chcesz usunąć oponę?</p>
+  <button type="submit">Usuń oponę</button>
+</form>
+{% endblock %}

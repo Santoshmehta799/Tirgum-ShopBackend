@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>To jest tytuł strony</title>
+    <style>
+      thead,
+      th {
+        height: 50px;
+        background-color: darkslategray;
+        padding-left: 5px;
+        padding-right: 5px;
+        position: sticky;
+        top: 0;
+        color: white;
+      }
+      th {
+        height: 50px;
+        padding-left: 5px;
+      }
+      tr {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+      }
+      tr:nth-child(even) {
+        background-color: lightblue;
+      }
+
+      .dot {
+        height: 20px;
+        width: 20px;
+        background-color: black;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+      .orangedot {
+        height: 20px;
+        width: 20px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgb(255, 150, 0),
+          /* rgb(255, 90, 0) */
+        );
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4),
+          0 1px 3px rgba(0, 0, 0, 0.3) inset;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+
+      .greendot {
+        height: 20px;
+        width: 20px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgb(0, 255, 0) /* rgb(0, 255, 0) */
+        );
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4),
+          0 1px 3px rgba(0, 0, 0, 0.3) inset;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+
+      #activate-otomoto {
+        padding: 5px 10px;
+        background-color: blueviolet;
+        color: white;
+        width: max-content;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        margin-bottom: 15px;
+      }
+
+      .red-dot {
+        height: 20px;
+        width: 20px;
+        background-color: red;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+      }
+      .hover-preview {
+        max-width: 100px;
+        max-height: 80px;
+        object-fit: cover;
+        cursor: zoom-in;
+        transition: transform 0.2s ease;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hover-preview:hover {
+        transform: scale(6);
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Allegro nieaktywne</h1>
+    <form method="POST">
+      {% csrf_token %}
+
+      <button
+        type="button"
+        id="upload-images"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: yellow;
+          color: white;
+          border-radius: 8px;
+          color: black;
+        "
+      >
+        Upload Images
+      </button>
+
+      <button
+        type="button"
+        id="create-ad"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: blue;
+          color: white;
+          border-radius: 8px;
+          color: white;
+        "
+      >
+        Create Ad
+      </button>
+
+      <button
+        type="button"
+        id="delete-draft"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: red;
+          color: white;
+          border-radius: 8px;
+          color: white;
+        "
+      >
+        Delete Draft
+      </button>
+      <button
+        type="button"
+        id="update-ads"
+        style="
+          cursor: pointer;
+          padding: 5px 10px;
+          background-color: orange;
+          color: white;
+          border-radius: 8px;
+          color: white;
+        "
+      >
+        Update Decr
+      </button>
+
+      <br />
+      <table class="table">
+        <thead>
+          <tr>
+            <!-- <th><input type="checkbox" id="select-all"></th> -->
+            <th scope="col">Id opony</th>
+            <th scope="col">Image</th>
+            <th>
+              <input type="checkbox" id="select-all" class="form-check-input" />
+            </th>
+
+            <!-- <th scope="col">Activated</th> -->
+            <th scope="col">allegro_id</th>
+
+            <!-- <th scope="col">Refresh</th>
+            <th scope="col">EAN</th> -->
+            <th scope="col">Marka</th>
+            <th scope="col">Bieżnik</th>
+            <th scope="col">Rozmiar</th>
+
+            <th scope="col">Bież. MIN</th>
+            <th scope="col">Bież. MAX</th>
+            <th scope="col">Dot</th>
+            <th scope="col">Netto</th>
+            <th scope="col">Link</th>
+            <th scope="col">Para</th>
+            <th scope="col">Img uploaded</th>
+            <th scope="col">Advert ID</th>
+            <th scope="col">Status</th>
+            <th scope="col">EAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in page_obj %}
+          <tr>
+            <!-- <td><input type="checkbox" class="select-product" value="{{product.id}}" name="bulk-product-olx"></td> -->
+            <th scope="row">{{product.pk}}</th>
+            <td>
+              {% if product.preferred_image %}
+              <img
+                src="{{ product.preferred_image.image.url }}"
+                width="80"
+                height="80"
+                class="hover-preview"
+              />
+              {% else %} No Image {% endif %}
+            </td>
+            <td>
+              <input
+                type="checkbox"
+                class="product-checkbox"
+                value="{{product.id}}"
+                name="bulk-product-otomoto"
+              />
+            </td>
+
+            <!-- <td>{{product.is_otomoto_advert_activated}}</td> -->
+            <!-- <td>{{ product.otomoto_advert_id|default:"" }}</td> -->
+            <td>
+              <!-- {% if product.otomoto_data and product.otomoto_data.otomoto_advert_id %} 
+              {{product.otomoto_data.otomoto_advert_id }} 
+              {% else %}
+              
+              {% endif %} -->
+            </td>
+
+            <td>{{product.brand.name}}</td>
+            <td>{{product.tread}}</td>
+            <td>{{product.size}}</td>
+
+            <td>{{product.tread_depth_min}}</td>
+            <td>{{product.tread_depth_max}}</td>
+            <td>{{product.dot}}</td>
+            <td>{{product.net_price}}</td>
+            <td>
+              <div class="link-to-detail-page">
+                <a href="/tyreadderapp/shop/{{product.pk}}">Link</a>
+              </div>
+            </td>
+            <td>{{product.pair}}</td>
+            <td>
+              {% if product.images_uploaded_to_allegro %}
+              <div class="greendot"></div>
+              {% else %}
+              <div class="reddot"></div>
+              {% endif %}
+            </td>
+            
+            <td>
+              {{ product.allegro_single_advert_data.allegro_advert_id|default_if_none:"" }}
+            </td>
+            <td>{{product.allegro_single_advert_data.status}}</td>
+            <td>{{product.ean}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+    <br /><br />
+    <div
+      class="pagination"
+      style="
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        font-size: 32px;
+      "
+    >
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      <span
+        >Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span
+      >
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </div>
+    <br /><br />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      function getCSRFToken() {
+        return document.querySelector("[name=csrfmiddlewaretoken]").value;
+      }
+    </script>
+    <script>
+      $(document).ready(function () {
+        $("#select-all").on("change", function () {
+          const isChecked = $(this).is(":checked");
+          $(".product-checkbox").prop("checked", isChecked);
+        });
+      });
+    </script>
+    <script>
+      $(document).on("click", "#upload-images", function () {
+        const selectedIds = [];
+        $(".product-checkbox:checked").each(function () {
+          selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length === 0) {
+          alert("Please select at least one product.");
+          return;
+        }
+
+        $.ajax({
+          url: "/allegro/upload_images/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ product_ids: selectedIds }),
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+          },
+          success: function (response) {
+            console.log("Upload Images Result:", response);
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
+        });
+      });
+
+      $(document).on("click", "#create-ad", function () {
+        const selectedIds = [];
+        $(".product-checkbox:checked").each(function () {
+          selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length === 0) {
+          alert("Please select at least one product.");
+          return;
+        }
+
+        $.ajax({
+          url: "/allegro/create_ad/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ product_ids: selectedIds }),
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+          },
+          success: function (response) {
+            console.log("Ad created:", response);
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
+        });
+      });
+    
+      $(document).on("click", "#delete-draft", function () {
+        const selectedIds = [];
+        $(".product-checkbox:checked").each(function () {
+          selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length === 0) {
+          alert("Please select at least one product.");
+          return;
+        }
+
+        $.ajax({
+          url: "/allegro/delete_draft/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ product_ids: selectedIds }),
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+          },
+          success: function (response) {
+            console.log("Deleted drafts:", response);
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
+        });
+      });
+
+      $(document).on("click", "#update-ads", function () {
+        const selectedIds = [];
+        $(".product-checkbox:checked").each(function () {
+          selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length === 0) {
+          alert("Please select at least one product.");
+          return;
+        }
+
+        $.ajax({
+          url: "/allegro/update_ads/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ product_ids: selectedIds }),
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+          },
+          success: function (response) {
+            console.log("Updated ads::", response);
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

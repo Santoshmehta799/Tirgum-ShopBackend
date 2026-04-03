@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://unpkg.com/htmx.org@1.5.0/dist/htmx.js"></script>
+    <title>Tyre Form</title>
+    <style>
+        label {
+            font-size: 2rem;
+        }
+        .toggle {
+            width: 150px;
+            height: 40px;
+            border-radius: 10%;
+            background-color: blue;
+            padding: 10px;
+        }
+
+        .tyre_id {
+            font-size: 8rem;
+        }
+
+        .single__checkbox {
+            background-color: rgb(41, 41, 41);
+            margin: 2rem 0;
+            border-radius: 1rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            align-items: center;
+        }
+
+        .single__checkbox input[type=checkbox] {
+            height: 6rem;
+            width: 4rem;
+            border-radius: 2rem;
+        }
+        textarea{
+            width:100%
+        }
+        input {
+            width:100%;
+            height: 60px;
+        }
+    </style>
+
+</head>
+
+<body class="bg-dark text-white container text-center">
+<div class="all_form_data">
+    <h1>Dodaj bieżnik</h1>
+
+
+    <form id="post_form" action="" method="post" enctype="multipart/form-data">
+
+        
+        {% csrf_token %} 
+            <!-- BRAND -->
+            {% if form.brand %}
+                <div class="data">
+                    <label for="brand">Brand</label>
+                    <select name="brand" class="form-select form-select-lg py-3 mb-3" required id="id_brand" ...>
+                        {% for id,name in form.fields.brand.choices %}
+                        <option class="w-100" value="{{ id }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+
+            <!-- Tread          -->
+            <div class="my-5">
+                {% if form.name %}
+                    <div>
+                        <label>{{ form.name.label }}</label>
+                        {{ form.name }}
+                    </div>
+                {% endif %}
+            </div>
+
+
+            <div class="checkbox__collection bg-warning py-3 px-2 rounded">
+                {% if form.is_steer %}
+                    <div class="single__checkbox">
+                        <label>{{ form.is_steer.label }}</label>
+                        <div>{{ form.is_steer }}</div>
+                    </div>
+                {% endif %} 
+                
+                {% if form.is_drive %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_drive.label }}</label>
+                    <div>{{ form.is_drive }}</div>
+                </div>
+                {% endif %}
+
+                {% if form.is_trailer %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_trailer.label }}</label>
+                    <div>{{ form.is_trailer }}</div>
+                </div>
+                {% endif %}
+
+                {% if form.is_m_s %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_m_s.label }}</label>
+                    <div>{{ form.is_m_s }}</div>
+                </div>
+                {% endif %}
+
+                {% if form.is_3pmsf %}
+                <div class="single__checkbox">
+                    <label>{{ form.is_3pmsf.label }}</label>
+                    <div>{{ form.is_3pmsf }}</div>
+                </div>
+                {% endif %}
+            </div>
+                       
+            
+        <div>
+        </div>
+
+     
+        
+
+        <button class="rounded w-100 py-3 bg-warning text-dark font-bold h1 my-3" type="submit">Dodaj</button>
+
+    </form>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous">
+</script>
+
+
+
+
+</html>
