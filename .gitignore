@@ -1,3 +1,8 @@
+backend/static/
+staticfiles/
+media/
+*.pkl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -135,6 +140,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+env_backend
 .env
 .envrc
 .venv

@@ -1,0 +1,29 @@
+# .github/workflows/deploy.yml
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - prod  # Trigger on push to the prod branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: SSH to DigitalOcean and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USER }}
+        password: ${{ secrets.DROPLET_PASSWORD }}
+        script: |
+          cd /root/Project  # Change to your project directory
+          git pull origin prod      # Pull the latest changes from the prod branch
+          docker-compose down       # Stop existing containers
+          docker-compose build      # Build Docker images
+          docker-compose up -d      # Run Docker containers in detached mode
+          docker-compose exec -T web python manage.py migrate  # Run migrations without TTY
