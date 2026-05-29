@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose.yml build web'
+                    sh 'docker-compose -f docker-compose.yml build web'
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose.yml up -d'
+                    sh 'docker-compose -f docker-compose.yml up -d'
                 }
             }
         }
