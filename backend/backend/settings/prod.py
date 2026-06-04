@@ -10,6 +10,7 @@ ALLOWED_HOSTS = [
     "shop.tirgum.pl",
     "*.tirgum.pl",
     "164.92.130.1",
+    
     # ".ngrok-free.app",
     # ".ngrok.io",
 ]
