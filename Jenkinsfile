@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     sh 'cp /var/jenkins_home/.env .env'
-                    sh 'docker build -t tirgum-backend-pipeline-web .'
+                    sh 'docker build -t tirgum-backend-pipeline-web -f backend/Dockerfile backend/'
                 }
             }
         }
