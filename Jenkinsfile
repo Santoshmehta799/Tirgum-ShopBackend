@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     sh 'cp /var/jenkins_home/.env .env'
-                    sh 'docker-compose -f docker-compose.yml build web'
+                    sh 'docker-compose -f docker-compose.yml build --pull never web'
                 }
             }
         }
