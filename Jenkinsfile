@@ -12,6 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh 'cp /var/jenkins_home/.env .env'
                     sh 'docker-compose -f docker-compose.yml build web'
                 }
             }
@@ -20,6 +21,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    sh 'cp /var/jenkins_home/.env .env'
                     sh 'docker-compose -f docker-compose.yml up -d'
                 }
             }
