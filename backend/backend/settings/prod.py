@@ -3,6 +3,8 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    "localhost",        # ← for local test
+    "127.0.0.1",        # ← for local test
     "www.tirgumpanel.pl",
     "tirgumpanel.pl",
     "shop.tirgum.pl",
