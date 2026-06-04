@@ -20,9 +20,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-    - ./backend:/app
-    - /var/www/tirgumpanel/static:/app/staticfiles
-    - /var/www/tirgumpanel/media:/app/media 
+      - /var/www/tirgumpanel/static:/app/staticfiles
+      - /var/www/tirgumpanel/media:/app/media
     ports:
       - "8000:8000"
     restart: always
